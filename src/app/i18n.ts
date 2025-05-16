@@ -21,7 +21,20 @@ const resources = {
         passwordPlaceholder: "Enter your password",
         registerBtn: "Register",
         backBtn: "Back to login"
-      }
+      },
+      login: "Login",
+      logout: "Logout",
+      cart: "Cart",
+      ru: "Russian",
+      en: "English",
+      notFound: {
+        title: "Oops! This page doesn't exist.",
+        description: "You may have typed the address incorrectly or the page has been moved.",
+        button: "Go to Home"
+      },
+      basket: {
+        title: "Basket"
+      },
     }
   },
   ru: {
@@ -43,7 +56,20 @@ const resources = {
         passwordPlaceholder: "Укажите пароль",
         registerBtn: "Зарегистрироваться",
         backBtn: "Назад ко входу"
-      }
+      },
+      login: "Войти",
+      logout: "Выйти",
+      cart: "Корзина",
+      ru: "Русский",
+      en: "Английский",
+      notFound: {
+        title: "Упс! Такой страницы не существует.",
+        description: "Возможно, вы ввели неправильный адрес или страница была удалена.",
+        button: "На главную"
+      },
+      basket: {
+        title: "Корзина"
+      },
     }
   }
 };
