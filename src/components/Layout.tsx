@@ -17,17 +17,28 @@ export const Layout: React.FC<Props> = ({title, children}) => {
   <>
     <Header />
     {/* Блок с заголовком */}
-      <Box sx={{ width: "100%", bgcolor: titleBg, py: 3 }}>
-        <Container maxWidth="xl">
-          <Typography variant="h4" component="h1" sx={{ color: titleColor }}>
-            {title}
-          </Typography>
-        </Container>
-      </Box>
+    <Box sx={{ width: "100%", bgcolor: titleBg, py: 3 }}>
+      <Container maxWidth="xl">
+        <Typography variant="h4" component="h1" sx={{ color: titleColor }}>
+          {title}
+        </Typography>
+      </Container>
+    </Box>
+    <Box sx={{ width: "100%", bgcolor: titleBg, py: 3 }}>
+      <Container maxWidth="xl">
+        <Typography variant="h4" component="h1" sx={{ color: titleColor }}>
+          {title}
+        </Typography>
+      </Container>
+    </Box>
 
-      {/* Основной контент */}
-      <Box sx={{ py: 4 }}>
-        <Container maxWidth="xl">{children}</Container>
-      </Box>
+    {/* Основной контент */}
+    <Box sx={{ py: 4 }}>
+      <Container maxWidth="xl">{children}</Container>
+    </Box>
+    {/* Основной контент */}
+    <Box sx={{ py: 4 }}>
+      <Container maxWidth="xl">{children}</Container>
+    </Box>
   </>
 )};
