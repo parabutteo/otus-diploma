@@ -1,5 +1,6 @@
 import React, { createContext, useMemo, useState, useEffect } from "react";
-import { ThemeProvider, createTheme, type PaletteMode, CssBaseline } from "@mui/material";
+import { ThemeProvider, type PaletteMode, CssBaseline } from "@mui/material";
+import { getTheme } from "./theme/theme"; // путь поправь при необходимости
 
 interface ThemeContextType {
   mode: PaletteMode;
@@ -29,15 +30,7 @@ export const CustomThemeProvider: React.FC<{ children: React.ReactNode }> = ({ c
     });
   };
 
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode,
-        },
-      }),
-    [mode]
-  );
+  const theme = useMemo(() => getTheme(mode), [mode]);
 
   useEffect(() => {
     localStorage.setItem("theme", mode);

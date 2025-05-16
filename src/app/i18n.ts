@@ -9,9 +9,14 @@ const resources = {
       cart: "Cart",
       ru: "Russian",
       en: "English",
+      notFound: {
+        title: "Oops! This page doesn't exist.",
+        description: "You may have typed the address incorrectly or the page has been moved.",
+        button: "Go to Home"
+      },
       basket: {
         title: "Basket"
-      }
+      },
     },
   },
   ru: {
@@ -21,9 +26,14 @@ const resources = {
       cart: "Корзина",
       ru: "Русский",
       en: "Английский",
+      notFound: {
+        title: "Упс! Такой страницы не существует.",
+        description: "Возможно, вы ввели неправильный адрес или страница была удалена.",
+        button: "На главную"
+      },
       basket: {
         title: "Корзина"
-      }
+      },
     },
   },
 };
