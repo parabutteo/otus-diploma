@@ -3,7 +3,7 @@
     "browser": true,
     "node": true,
     "commonjs": true,
-    "es2021": true
+    "es2021": true,
   },
   "extends": [
     "plugin:react/jsx-runtime", // позволяет не импортировать реакт
@@ -15,43 +15,30 @@
     "plugin:jest/recommended",
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": "latest"
+    "ecmaVersion": "latest",
   },
-  "plugins": [
-    "react",
-    "@typescript-eslint"
-  ],
+  "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "@typescript-eslint/no-var-requires": 0,
     "@typescript-eslint/triple-slash-reference": "error",
     "react/jsx-uses-vars": "error",
     "react/jsx-uses-react": "error",
-    "import/named": 0
+    "import/named": 0,
   },
   "settings": {
     "react": {
-      "version": "detect"
+      "version": "detect",
     },
     "import/resolver": {
       "node": {
         "paths": ["."],
-        "extensions": [
-          ".js",
-          ".jsx",
-          ".ts",
-          ".tsx"
-        ]
-      }
-    }
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
   },
-  "ignorePatterns": [
-    "node_modules/",
-    "dist/",
-    "env.d.ts"
-  ],
 }

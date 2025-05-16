@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { singup } from '../../../shared/api/auth/singup';
 import { backendErrorMessages } from '../../../shared/constants';
 import { AuthMarkUp } from './AuthMarkUp';
-import { TAuthFormData } from './types';
+import type { TAuthFormData } from './types';
 
 // Тип для видов формы
 type TAuth = 'reg' | 'auth';

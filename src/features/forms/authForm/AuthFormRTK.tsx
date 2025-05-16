@@ -6,10 +6,10 @@ import { randomNumberGenerator } from '../../../features/createRandomProduct';
 import { useNavigate } from 'react-router-dom';
 import { backendErrorMessages } from '../../../shared/constants';
 import { useSingUpMutation } from '../../../shared/api/auth/rtk_signup';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { SerializedError } from '@reduxjs/toolkit';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import type { SerializedError } from '@reduxjs/toolkit';
 import { AuthMarkUp } from './AuthMarkUp';
-import { TAuthFormData } from './types';
+import type { TAuthFormData } from './types';
 
 // Тип для видов формы
 type TAuth = 'reg' | 'auth';

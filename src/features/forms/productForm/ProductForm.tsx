@@ -1,5 +1,5 @@
-import { useForm } from 'react-hook-form';
 import React from 'react';
+import { useForm } from 'react-hook-form';
 import { Button } from '../../../components';
 import clsx from 'clsx';
 import { useAppDispatch } from '../../../store/hooks';
@@ -96,7 +96,7 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType }) => {
       <label htmlFor="category">Категория</label>
       <select
         {...register('category', {
-          value: !isAddProcedure ? 't-shirts' : null,
+          value: !isAddProcedure ? 't-shirts' : '',
           required: true,
         })}
         className={clsx(errors.category && 'error-field', 'grid-content')}

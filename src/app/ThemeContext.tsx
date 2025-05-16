@@ -1,6 +1,6 @@
-import React, { createContext, useMemo, useState, useEffect } from "react";
-import { ThemeProvider, type PaletteMode, CssBaseline } from "@mui/material";
-import { getTheme } from "./theme/theme"; // путь поправь при необходимости
+import React, { createContext, useMemo, useState, useEffect } from 'react';
+import { ThemeProvider, type PaletteMode, CssBaseline } from '@mui/material';
+import { getTheme } from './theme/theme'; // путь поправь при необходимости
 
 interface ThemeContextType {
   mode: PaletteMode;
@@ -8,15 +8,15 @@ interface ThemeContextType {
 }
 
 export const ThemeContext = createContext<ThemeContextType>({
-  mode: "light",
+  mode: 'light',
   toggleTheme: () => {},
 });
 
 const getInitialMode = (): PaletteMode => {
-  const saved = localStorage.getItem("theme");
-  if (saved === "light" || saved === "dark") return saved;
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  return prefersDark ? "dark" : "light";
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light' || saved === 'dark') return saved;
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  return prefersDark ? 'dark' : 'light';
 };
 
 export const CustomThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -24,8 +24,8 @@ export const CustomThemeProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const toggleTheme = () => {
     setMode((prev) => {
-      const next = prev === "light" ? "dark" : "light";
-      localStorage.setItem("theme", next);
+      const next = prev === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', next);
       return next;
     });
   };
@@ -33,7 +33,7 @@ export const CustomThemeProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const theme = useMemo(() => getTheme(mode), [mode]);
 
   useEffect(() => {
-    localStorage.setItem("theme", mode);
+    localStorage.setItem('theme', mode);
   }, [mode]);
 
   return (
