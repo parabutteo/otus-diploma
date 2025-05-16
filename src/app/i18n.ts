@@ -9,6 +9,9 @@ const resources = {
       cart: "Cart",
       ru: "Russian",
       en: "English",
+      basket: {
+        title: "Basket"
+      }
     },
   },
   ru: {
@@ -18,6 +21,9 @@ const resources = {
       cart: "Корзина",
       ru: "Русский",
       en: "Английский",
+      basket: {
+        title: "Корзина"
+      }
     },
   },
 };
