@@ -1,4 +1,4 @@
-import { IShortCardItem } from '../components/Card/ShortCard';
+import { type IShortCardItem } from '../components/Card/ShortCard';
 import createRandomProductImage from './createRandomProductImage';
 
 export const randomNumberGenerator = (min: number, max: number): number =>
