@@ -129,10 +129,10 @@ export const Header: React.FC = () => {
 
               <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
                 <MenuItem selected={i18n.language === 'ru'} onClick={() => handleLangSelect('ru')}>
-                  {t('ru')}
+                  🇷🇺 Русский
                 </MenuItem>
                 <MenuItem selected={i18n.language === 'en'} onClick={() => handleLangSelect('en')}>
-                  {t('en')}
+                  🇬🇧 English
                 </MenuItem>
               </Menu>
 

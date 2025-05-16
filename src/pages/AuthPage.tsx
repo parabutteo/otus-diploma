@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { LangAndHomeControls } from "../components";
 
 export const AuthPage: React.FC = () => {
   const { t } = useTranslation();
@@ -36,6 +37,7 @@ export const AuthPage: React.FC = () => {
       px={2}
     >
       <Box maxWidth={600} width="100%">
+        <LangAndHomeControls />
         <Typography variant="h5" fontWeight="bold" gutterBottom>
           {t("auth.title")}
         </Typography>
