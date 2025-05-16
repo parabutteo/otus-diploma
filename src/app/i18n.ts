@@ -4,6 +4,24 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      auth: {
+        title: "Authorization",
+        login: "Login",
+        password: "Password",
+        loginPlaceholder: "Enter your login",
+        passwordPlaceholder: "Enter your password",
+        loginBtn: "Login",
+        registerBtn: "Register"
+      },
+      reg: {
+        title: "Registration",
+        login: "Login",
+        password: "Password",
+        loginPlaceholder: "Enter your login",
+        passwordPlaceholder: "Enter your password",
+        registerBtn: "Register",
+        backBtn: "Back to login"
+      },
       login: "Login",
       logout: "Logout",
       cart: "Cart",
@@ -17,10 +35,28 @@ const resources = {
       basket: {
         title: "Basket"
       },
-    },
+    }
   },
   ru: {
     translation: {
+      auth: {
+        title: "Авторизация",
+        login: "Логин",
+        password: "Пароль",
+        loginPlaceholder: "Укажите логин",
+        passwordPlaceholder: "Укажите пароль",
+        loginBtn: "Войти",
+        registerBtn: "Зарегистрироваться"
+      },
+      reg: {
+        title: "Регистрация",
+        login: "Логин",
+        password: "Пароль",
+        loginPlaceholder: "Укажите логин",
+        passwordPlaceholder: "Укажите пароль",
+        registerBtn: "Зарегистрироваться",
+        backBtn: "Назад ко входу"
+      },
       login: "Войти",
       logout: "Выйти",
       cart: "Корзина",
@@ -34,8 +70,8 @@ const resources = {
       basket: {
         title: "Корзина"
       },
-    },
-  },
+    }
+  }
 };
 
 i18n.use(initReactI18next).init({
