@@ -1,12 +1,10 @@
 import * as React from "react";
-import { Catalog } from "../pages";
+import { AppRoutes } from "./navigation/AppRoutes";
 
 const App: React.FC = () => {
 
   return (
-    <>
-      <Catalog />
-    </>
+    <AppRoutes />
   )
 }
 
