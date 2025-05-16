@@ -1,9 +1,9 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Button } from '../../../components';
 import clsx from 'clsx';
 import { useAppDispatch } from '../../../store/hooks';
 import { addProduct, editProduct, removeProduct } from '../../../features/products/productsSlice';
+import { Button } from '@mui/material';
 
 // Тип для видов формы
 type TProcedure = 'add' | 'edit';
