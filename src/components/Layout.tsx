@@ -18,7 +18,7 @@ export const Layout: React.FC<Props> = ({title, children}) => {
     <Header />
     {/* Блок с заголовком */}
       <Box sx={{ width: "100%", bgcolor: titleBg, py: 3 }}>
-        <Container maxWidth="lg">
+        <Container maxWidth="xl">
           <Typography variant="h4" component="h1" sx={{ color: titleColor }}>
             {title}
           </Typography>
@@ -27,7 +27,7 @@ export const Layout: React.FC<Props> = ({title, children}) => {
 
       {/* Основной контент */}
       <Box sx={{ py: 4 }}>
-        <Container maxWidth="lg">{children}</Container>
+        <Container maxWidth="xl">{children}</Container>
       </Box>
   </>
 )};
