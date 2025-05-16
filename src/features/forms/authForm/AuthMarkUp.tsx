@@ -1,9 +1,9 @@
 import React from 'react';
 import clsx from 'clsx';
-import { Button } from '../../../components';
-import { FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormReset } from 'react-hook-form';
-import { NavigateFunction } from 'react-router-dom';
-import { TAuthFormData } from './types';
+import type { FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormReset } from 'react-hook-form';
+import type { NavigateFunction } from 'react-router-dom';
+import type { TAuthFormData } from './types';
+import { Button } from '@mui/material';
 
 interface IAuthMarkUp {
   errors: FieldErrors<TAuthFormData>;

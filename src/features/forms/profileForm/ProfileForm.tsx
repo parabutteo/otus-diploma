@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
 import React from 'react';
-import { Button } from '../../../components';
 import clsx from 'clsx';
-import { ProfileT } from '../../../pages/Profile';
+import { Button } from '@mui/material';
+import type { ProfileT } from '../../../pages/Profile';
 
 interface IProfileForm {
   /** Опциональные классы */
