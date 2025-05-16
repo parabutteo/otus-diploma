@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 interface AuthState {
+  profileId: string;
   token: string | null;
   profile: {
     id: string;
@@ -16,6 +17,7 @@ const loadProfileFromStorage = () => {
 };
 
 const initialState: AuthState = {
+  profileId: localStorage.getItem('pid') || null,
   token: localStorage.getItem('token') || null,
   profile: loadProfileFromStorage(),
 };
@@ -36,17 +38,22 @@ const authSlice = createSlice({
       state.profile = profile;
       localStorage.setItem('profile', JSON.stringify(profile));
     },
+    setProfileID(state, action: PayloadAction<string>) {
+      state.profileId = action.payload;
+      localStorage.setItem('pid', action.payload);
+    },
     updateProfile(state, action: PayloadAction<AuthState['profile']>) {
       state.profile = action.payload;
       localStorage.setItem('profile', JSON.stringify(action.payload));
     },
     logout: (state) => {
       state.token = null;
+      state.profileId = null;
       state.profile = null;
       localStorage.removeItem('token');
     },
   },
 });
 
-export const { setToken, updateProfile, logout } = authSlice.actions;
+export const { setToken, setProfileID, updateProfile, logout } = authSlice.actions;
 export default authSlice.reducer;
