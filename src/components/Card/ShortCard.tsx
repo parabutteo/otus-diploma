@@ -11,6 +11,7 @@ import {
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { addItemToCart, removeItemFromCart } from "../../features/cart/cartSlice";
+import { useTranslation } from "react-i18next";
 
 export interface IShortCardItem {
   /** Идентификатор */
@@ -34,6 +35,7 @@ export interface IShortCard {
 export const ShortCard: React.FC<IShortCard> = ({ item }) => {
   const { title, details, price, image } = item;
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const cartItems = useAppSelector((state) => state.cart.items);
   const totalQuantity = cartItems.reduce(
@@ -93,7 +95,7 @@ export const ShortCard: React.FC<IShortCard> = ({ item }) => {
             endIcon={<ShoppingCartIcon />}
             onClick={addItemToCartHandler}
           >
-            Добавить в корзину
+            {t("card.addToBasket")}
           </Button>
         )}
       </CardActions>

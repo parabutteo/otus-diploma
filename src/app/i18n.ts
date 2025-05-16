@@ -35,6 +35,13 @@ const resources = {
       basket: {
         title: 'Basket',
       },
+      catalogue: {
+        title: 'Welcome to ParaVite Store',
+        showMore: 'Show more'
+      },
+      card: {
+        addToBasket: 'Add to basket'
+      }
     },
   },
   ru: {
@@ -70,6 +77,13 @@ const resources = {
       basket: {
         title: 'Корзина',
       },
+      catalogue: {
+        title: 'Добро пожаловать в ParaVite Store',
+        showMore: 'Показать ещё'
+      },
+      card: {
+        addToBasket: 'Добавить в корзину'
+      }
     },
   },
 };
