@@ -19,7 +19,7 @@ export const Catalog: React.FC = () => {
   };
 
   return (
-    <Layout title="Welcome to Otus Online Store">
+    <Layout title="Каталог">
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <Grid container spacing={3}>
           {products.map((item) => (
