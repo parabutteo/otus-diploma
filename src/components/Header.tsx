@@ -1,5 +1,6 @@
 // src/components/Header.tsx
 import React from "react";
+import { useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -17,17 +18,29 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { visuallyHidden } from "@mui/utils";
-import { useAppSelector, useAppDispatch } from "../hooks";
-import { toggleLogin } from "../features/user/userSlice";
+import { useAppSelector, useAppDispatch } from "../store/hooks.ts";
 import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../app/ThemeContext.tsx";
+import { logout } from "../features/auth/authSlice.ts";
+import { clearCart } from "../features/cart/cartSlice.ts";
 
 
 export const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
-  const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
-  const cartCount = useAppSelector((state) => state.cart.itemsCount);
+  const navigate = useNavigate();
+  const token = useAppSelector((state) => state.auth.token);
+  const isUserLoggedIn = token !== null;
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const cartItemsCounter = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  const loginHandler = (): void => {
+    if (isUserLoggedIn) {
+      dispatch(logout());
+      dispatch(clearCart());
+      localStorage.removeItem('cart');
+    } else navigate('/auth');
+  };
 
   const { mode, toggleTheme } = React.useContext(ThemeContext);
 
@@ -54,7 +67,7 @@ export const Header: React.FC = () => {
         </Typography>
 
         <IconButton color="inherit">
-          <Badge badgeContent={cartCount} color="error">
+          <Badge badgeContent={cartItemsCounter} color="error">
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
@@ -76,11 +89,11 @@ export const Header: React.FC = () => {
         {/* Вход / Выход */}
         <IconButton
           color="inherit"
-          onClick={() => dispatch(toggleLogin())}
-          aria-label={t(isLoggedIn ? "logout" : "login")}
+          onClick={loginHandler}
+          aria-label={t(isUserLoggedIn ? "logout" : "login")}
         >
-          {isLoggedIn ? <LogoutIcon /> : <PersonIcon />}
-          <span style={visuallyHidden}>{t(isLoggedIn ? "logout" : "login")}</span>
+          {isUserLoggedIn ? <LogoutIcon /> : <PersonIcon />}
+          <span style={visuallyHidden}>{t(isUserLoggedIn ? "logout" : "login")}</span>
         </IconButton>
       </Toolbar>
     </AppBar>
