@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router';
-import { Catalog } from '../../pages';
+import { AuthPage, Catalog, RegisterPage } from '../../pages';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { initializeApp } from '../../features/app/appSlice';
 
@@ -25,6 +25,8 @@ export const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<Catalog />} />
+      <Route path='/auth' element={<AuthPage />} />
+      <Route path='/reg' element={<RegisterPage />} />
     </Routes>
   );
 };

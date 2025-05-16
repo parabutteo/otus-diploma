@@ -4,22 +4,48 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
-      login: "Login",
-      logout: "Logout",
-      cart: "Cart",
-      ru: "Russian",
-      en: "English",
-    },
+      auth: {
+        title: "Authorization",
+        login: "Login",
+        password: "Password",
+        loginPlaceholder: "Enter your login",
+        passwordPlaceholder: "Enter your password",
+        loginBtn: "Login",
+        registerBtn: "Register"
+      },
+      reg: {
+        title: "Registration",
+        login: "Login",
+        password: "Password",
+        loginPlaceholder: "Enter your login",
+        passwordPlaceholder: "Enter your password",
+        registerBtn: "Register",
+        backBtn: "Back to login"
+      }
+    }
   },
   ru: {
     translation: {
-      login: "Войти",
-      logout: "Выйти",
-      cart: "Корзина",
-      ru: "Русский",
-      en: "Английский",
-    },
-  },
+      auth: {
+        title: "Авторизация",
+        login: "Логин",
+        password: "Пароль",
+        loginPlaceholder: "Укажите логин",
+        passwordPlaceholder: "Укажите пароль",
+        loginBtn: "Войти",
+        registerBtn: "Зарегистрироваться"
+      },
+      reg: {
+        title: "Регистрация",
+        login: "Логин",
+        password: "Пароль",
+        loginPlaceholder: "Укажите логин",
+        passwordPlaceholder: "Укажите пароль",
+        registerBtn: "Зарегистрироваться",
+        backBtn: "Назад ко входу"
+      }
+    }
+  }
 };
 
 i18n.use(initReactI18next).init({
