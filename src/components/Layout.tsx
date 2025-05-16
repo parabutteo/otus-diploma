@@ -29,9 +29,5 @@ export const Layout: React.FC<Props> = ({title, children}) => {
     <Box sx={{ py: 4 }}>
       <Container maxWidth="xl">{children}</Container>
     </Box>
-    {/* Основной контент */}
-    <Box sx={{ py: 4 }}>
-      <Container maxWidth="xl">{children}</Container>
-    </Box>
   </>
 )};
