@@ -1,11 +1,8 @@
-import * as React from "react";
-import { AppRoutes } from "./navigation/AppRoutes";
+import * as React from 'react';
+import { AppRoutes } from './navigation/AppRoutes';
 
 const App: React.FC = () => {
+  return <AppRoutes />;
+};
 
-  return (
-    <AppRoutes />
-  )
-}
-
-export default App
+export default App;
