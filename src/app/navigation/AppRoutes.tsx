@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router';
-import { Catalog, NotFound } from '../../pages';
+import { Basket, Catalog, NotFound } from '../../pages';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { initializeApp } from '../../features/app/appSlice';
 
@@ -25,6 +25,7 @@ export const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<Catalog />} />
+      <Route path="/cart" element={<Basket />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
