@@ -17,7 +17,7 @@ export const Layout: React.FC<Props> = ({title, children}) => {
   <>
     <Header />
     {/* Блок с заголовком */}
-    <Box sx={{ width: "100%", bgcolor: titleBg, py: 3 }}>
+    <Box height={90} sx={{ width: "100%", bgcolor: titleBg, py: 3 }}>
       <Container maxWidth="xl">
         <Typography variant="h4" component="h1" sx={{ color: titleColor }}>
           {title}

@@ -48,7 +48,9 @@ const resources = {
         showMore: 'Show more'
       },
       card: {
-        addToBasket: 'Add to basket'
+        addToBasket: 'Add to basket',
+        error: 'Error',
+        notFound: 'Product not found'
       },
       profileForm: {
         name: "Name",
@@ -67,7 +69,6 @@ const resources = {
         edit: "Edit",
         noData: "No profile data"
       },
-      
       admin: {
         title: 'Admin Panel',
         add: 'Add New Product',
@@ -137,7 +138,9 @@ const resources = {
         showMore: 'Показать ещё'
       },
       card: {
-        addToBasket: 'Добавить в корзину'
+        addToBasket: 'Добавить в корзину',
+        error: 'Ошибка',
+        notFound: 'Товар не найден'
       },
       profileForm: {
         name: "Имя",
