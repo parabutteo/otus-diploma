@@ -47,21 +47,25 @@ export const BasketItem: React.FC<IBasketItem> = ({ id, counter, onLoading }) =>
   const removeItemFromCartHandler = () => dispatch(removeItemFromCart(id));
 
   return (
-    <Card sx={{ display: 'flex', alignItems: 'center', px: 2 }}>
+    <Card sx={{ display: 'flex', alignItems: 'flex-start', px: 2 }}>
       <CardMedia
         component="img"
         image={product.photo}
         alt={product.name}
-        sx={{ width: 120, height: 120, objectFit: 'cover', borderRadius: 1 }}
+        sx={{ width: 100, height: 150, objectFit: 'cover' }}
       />
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography fontWeight={600}>{product.name}</Typography>
         <Typography>{price}.00&nbsp;₽</Typography>
-        <Box width={150}>
-          <AddToBasket counter={counter} increaseClick={addItemToCartHandler} decreaseClick={removeItemFromCartHandler} />
+        <Box width={150} marginTop={2}>
+          <AddToBasket
+            counter={counter}
+            increaseClick={addItemToCartHandler}
+            decreaseClick={removeItemFromCartHandler}
+          />
         </Box>
       </CardContent>
-      <IconButton onClick={removeFromCartHandler}>
+      <IconButton onClick={removeFromCartHandler} sx={{ my: 2 }}>
         <DeleteIcon />
       </IconButton>
     </Card>

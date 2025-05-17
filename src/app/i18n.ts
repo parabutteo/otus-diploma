@@ -40,7 +40,7 @@ const resources = {
         orderSuccess: "Order placed successfully!",
         orderId: "Order ID",
         goToOrders: "Go to My Orders",
-        orderError: "An error occurred while placing your order.",
+        orderError: "An error occurred while placing your order",
         placeOrder: "Place Order",
       },
       catalogue: {
@@ -130,7 +130,7 @@ const resources = {
         orderSuccess: "Заказ успешно оформлен!",
         orderId: "Номер заказа",
         goToOrders: "Перейти к заказам",
-        orderError: "Ошибка при оформлении заказа.",
+        orderError: "Ошибка при оформлении заказа",
         placeOrder: "Оформить заказ",
       },
       catalogue: {
