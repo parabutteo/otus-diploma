@@ -42,7 +42,7 @@ const resources = {
       card: {
         addToBasket: 'Add to basket'
       },
-      profile: {
+      profileForm: {
         name: "Name",
         namePlaceholder: "Enter your name",
         nameRequired: "Please enter your name",
@@ -50,6 +50,14 @@ const resources = {
         about: "About Me",
         aboutPlaceholder: "Write a few words about yourself",
         submit: "Submit"
+      },
+      profilePage: {
+        title: "Profile",
+        orders: "Go to My Orders",
+        name: "Name",
+        about: "About Me",
+        edit: "Edit",
+        noData: "No profile data"
       }
     },
   },
@@ -93,7 +101,7 @@ const resources = {
       card: {
         addToBasket: 'Добавить в корзину'
       },
-      profile: {
+      profileForm: {
         name: "Имя",
         namePlaceholder: "Введите имя",
         nameRequired: "Пожалуйста, введите ваше имя",
@@ -101,6 +109,14 @@ const resources = {
         about: "Обо мне",
         aboutPlaceholder: "Напишите пару слов о себе",
         submit: "Отправить"
+      },
+      profilePage: {
+        title: "Профиль",
+        orders: "Перейти к моим заказам",
+        name: "Имя",
+        about: "Обо мне",
+        edit: "Редактировать",
+        noData: "Нет данных профиля"
       }
     },
   },

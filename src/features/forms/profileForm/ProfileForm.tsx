@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 interface IProfileForm {
   className?: string;
   form: ProfileT;
-  setForm: React.Dispatch<React.SetStateAction<ProfileT>>;
+  setForm: React.Dispatch<React.SetStateAction<ProfileT | null>>;
   sendHandler: () => void;
 }
 
@@ -45,14 +45,14 @@ export const ProfileForm: React.FC<IProfileForm> = ({ className, form, setForm, 
         <Box>
           <TextField
             fullWidth
-            label={t('profile.name')}
-            placeholder={t('profile.namePlaceholder')}
+            label={t('profileForm.name')}
+            placeholder={t('profileForm.namePlaceholder')}
             defaultValue={form.name}
             {...register('name', {
-              required: t('profile.nameRequired'),
+              required: t('profileForm.nameRequired'),
               pattern: {
                 value: namePattern,
-                message: t('profile.nameInvalid'),
+                message: t('profileForm.nameInvalid'),
               },
             })}
             error={!!errors.name}
@@ -66,8 +66,8 @@ export const ProfileForm: React.FC<IProfileForm> = ({ className, form, setForm, 
             fullWidth
             multiline
             minRows={4}
-            label={t('profile.about')}
-            placeholder={t('profile.aboutPlaceholder')}
+            label={t('profileForm.about')}
+            placeholder={t('profileForm.aboutPlaceholder')}
             defaultValue={form.aboutMe}
             {...register('aboutMe')}
             onChange={(e) => setForm({ ...form, aboutMe: e.target.value })}
@@ -76,7 +76,7 @@ export const ProfileForm: React.FC<IProfileForm> = ({ className, form, setForm, 
 
         <Box>
           <Button type="submit" variant="contained">
-            {t('profile.submit')}
+            {t('profileForm.submit')}
           </Button>
         </Box>
       </Stack>
