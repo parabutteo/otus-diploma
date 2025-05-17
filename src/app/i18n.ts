@@ -33,7 +33,10 @@ const resources = {
         button: 'Go to Home',
       },
       basket: {
-        title: 'Basket',
+        title: "Basket",
+        emptyTitle: "Your basket is empty",
+        emptyMessage: "Add some products to see them here.",
+        toCatalog: "Go to catalog",
       },
       catalogue: {
         title: 'Welcome to ParaVite Store',
@@ -97,7 +100,10 @@ const resources = {
         button: 'На главную',
       },
       basket: {
-        title: 'Корзина',
+        title: "Корзина",
+        emptyTitle: "Ваша корзина пуста",
+        emptyMessage: "Добавьте товары, чтобы они появились здесь.",
+        toCatalog: "К товарам",
       },
       catalogue: {
         title: 'Добро пожаловать в ParaVite Store',
