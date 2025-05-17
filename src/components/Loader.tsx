@@ -10,7 +10,7 @@ export const Loader: React.FC = () => {
       display="flex"
       alignItems="center"
       justifyContent="center"
-      height="100vh"
+      height="400px"
       width="100%"
     >
       <CircularProgress size={64} />

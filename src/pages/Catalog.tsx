@@ -1,40 +1,72 @@
 import * as React from 'react';
 import { Box, Button, Container, Grid } from '@mui/material';
-import { Layout } from '../components';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { createRandomProduct } from '../features/createRandomProduct';
-import { addRandomProducts } from '../features/products/productsSlice';
-import { ShortCard } from '../components/Card/ShortCard';
+import { Layout, Loader } from '../components';
+import { ShortCard, type IShortCardItem } from '../components/Card/ShortCard';
 import { useTranslation } from 'react-i18next';
+import { GET_PRODUCTS } from '../graphql/queries/products';
+import { useQuery } from '@apollo/client';
+import { COMMAND_ID } from '../shared/constants';
 
 export const Catalog: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const products = useAppSelector((state) => state.products);
+  const [visibleCount, setVisibleCount] = React.useState(4);
   const { t } = useTranslation();
 
+  // Параметры запроса
+  const input = {
+    // например: categoryId: 'some-id'
+  };
+
+  const { data, loading, error } = useQuery(GET_PRODUCTS, {
+    variables: { input },
+  });
+
+  // Получаем массив товаров из данных запроса
+  const products = data?.products.getMany.data;
+
+  // Приводим данные к нужному типу
+  const normalizedProducts: IShortCardItem[] =
+    products && Array.isArray(products)
+      ? products
+          .filter((p: IShortCardItem) => p.commandId === COMMAND_ID)
+          .map((p: IShortCardItem) => ({
+            id: p.id,
+            name: p.name,
+            desc: p.desc,
+            price: p.price,
+            photo: p.photo,
+            category: p.category,
+          }))
+      : [];
+
+  // Ограничиваем отображение товаров по visibleCount
+  const visibleProducts = normalizedProducts.slice(0, visibleCount);
+
+  // Обработчик кнопки "Показать ещё"
   const showMoreBtnHandler = (): void => {
-    const newProducts = Array.from({ length: 4 }, (_, index) =>
-      createRandomProduct(products.length + 1 + index),
-    );
-    dispatch(addRandomProducts(newProducts));
+    setVisibleCount((prev) => prev + 4);
   };
 
   return (
     <Layout title={t('catalogue.title')}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
+        {loading && <Loader />}
         <Grid container spacing={3} columns={12} component="div">
-          {products.map((item) => (
-            <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }} component="div">
-              <ShortCard item={item} />
-            </Grid>
-          ))}
+          {!loading &&
+            !error &&
+            visibleProducts.length > 0 &&
+            visibleProducts.map((item) => (
+              <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }} component="div">
+                <ShortCard item={item} key={item.id} />
+              </Grid>
+            ))}
         </Grid>
-
-        <Box display="flex" justifyContent="center" mt={4}>
-          <Button variant="outlined" onClick={showMoreBtnHandler}>
-            {t('catalogue.showMore')}
-          </Button>
-        </Box>
+        {!loading && !error && (
+          <Box display="flex" justifyContent="center" mt={4}>
+            <Button variant="outlined" onClick={showMoreBtnHandler}>
+              {t('catalogue.showMore')}
+            </Button>
+          </Box>
+        )}
       </Container>
     </Layout>
   );
