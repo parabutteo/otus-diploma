@@ -104,7 +104,7 @@ export const AuthForm: React.FC<IAuthForm> = ({ authType }) => {
     <AuthMarkUp
       errors={errors}
       register={register}
-      errorLogin={errorLogin}
+      errorLogin={errorLogin === null ? '' : errorLogin}
       reset={reset}
       handleSubmit={handleSubmit}
       onSubmit={onSubmit}

@@ -37,13 +37,20 @@ const resources = {
         emptyTitle: "Your basket is empty",
         emptyMessage: "Add some products to see them here.",
         toCatalog: "Go to catalog",
+        orderSuccess: "Order placed successfully!",
+        orderId: "Order ID",
+        goToOrders: "Go to My Orders",
+        orderError: "An error occurred while placing your order.",
+        placeOrder: "Place Order",
       },
       catalogue: {
         title: 'Welcome to ParaVite Store',
         showMore: 'Show more'
       },
       card: {
-        addToBasket: 'Add to basket'
+        addToBasket: 'Add to basket',
+        error: 'Error',
+        notFound: 'Product not found'
       },
       profileForm: {
         name: "Name",
@@ -62,7 +69,6 @@ const resources = {
         edit: "Edit",
         noData: "No profile data"
       },
-      
       admin: {
         title: 'Admin Panel',
         add: 'Add New Product',
@@ -121,13 +127,20 @@ const resources = {
         emptyTitle: "Ваша корзина пуста",
         emptyMessage: "Добавьте товары, чтобы они появились здесь.",
         toCatalog: "К товарам",
+        orderSuccess: "Заказ успешно оформлен!",
+        orderId: "Номер заказа",
+        goToOrders: "Перейти к заказам",
+        orderError: "Ошибка при оформлении заказа.",
+        placeOrder: "Оформить заказ",
       },
       catalogue: {
         title: 'Добро пожаловать в ParaVite Store',
         showMore: 'Показать ещё'
       },
       card: {
-        addToBasket: 'Добавить в корзину'
+        addToBasket: 'Добавить в корзину',
+        error: 'Ошибка',
+        notFound: 'Товар не найден'
       },
       profileForm: {
         name: "Имя",

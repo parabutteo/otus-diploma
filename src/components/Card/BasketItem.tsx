@@ -4,7 +4,7 @@ import { addItemToCart, removeFromCart, removeItemFromCart } from '../../feature
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCT } from '../../graphql/queries/products';
 import { AddToBasket } from '../AddToBasket';
-import { Card, CardContent, CardMedia, IconButton, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, IconButton, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface IBasketItem {
@@ -57,7 +57,9 @@ export const BasketItem: React.FC<IBasketItem> = ({ id, counter, onLoading }) =>
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography fontWeight={600}>{product.name}</Typography>
         <Typography>{price}.00&nbsp;₽</Typography>
-        <AddToBasket counter={counter} increaseClick={addItemToCartHandler} decreaseClick={removeItemFromCartHandler} />
+        <Box width={150}>
+          <AddToBasket counter={counter} increaseClick={addItemToCartHandler} decreaseClick={removeItemFromCartHandler} />
+        </Box>
       </CardContent>
       <IconButton onClick={removeFromCartHandler}>
         <DeleteIcon />
