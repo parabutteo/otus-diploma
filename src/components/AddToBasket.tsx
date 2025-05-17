@@ -1,6 +1,9 @@
 import React from 'react';
-import clsx from 'clsx';
-import { Button } from '@mui/material';
+import { Button, Box, IconButton } from '@mui/material';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
+import { useTranslation } from 'react-i18next';
 
 interface IAddToBasket {
   /** Счетчик позиций */
@@ -24,22 +27,65 @@ interface IAddToBasket {
  *
  * Компонент подходит под паттерн "High order component"
  */
+export const AddToBasket: React.FC<IAddToBasket> = ({
+  counter,
+  isDisabled,
+  increaseClick,
+  decreaseClick,
+}) => {
+  const { t } = useTranslation();
 
-export const AddToBasket: React.FC<IAddToBasket> = ({ counter, isDisabled, increaseClick, decreaseClick }) => {
   if (counter > 0) {
     return (
-      <div className={clsx('counter', 'flex-row', 'align-items-center', isDisabled && 'disabled')}>
-        <Button onClick={decreaseClick}>-</Button>
-        <input type="number" value={counter} onChange={() => null} readOnly />
-        <Button onClick={increaseClick}>+</Button>
-      </div>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          border: 1,
+          borderColor: 'divider',
+          borderRadius: 2,
+          overflow: 'hidden',
+          width: '100%',
+        }}
+      >
+        <IconButton
+          onClick={decreaseClick}
+          disabled={isDisabled}
+          sx={{ borderRadius: 0, width: 40, height: 40 }}
+        >
+          <RemoveIcon fontSize="small" />
+        </IconButton>
+        <Box
+          sx={{
+            flexGrow: 1,
+            textAlign: 'center',
+            fontWeight: 500,
+            fontSize: '1rem',
+            px: 1,
+          }}
+        >
+          {counter}
+        </Box>
+        <IconButton
+          onClick={increaseClick}
+          disabled={isDisabled}
+          sx={{ borderRadius: 0, width: 40, height: 40 }}
+        >
+          <AddIcon fontSize="small" />
+        </IconButton>
+      </Box>
     );
   }
 
   return (
-    <Button disabled={isDisabled} onClick={increaseClick}>
-      Добавить в корзину
-      <i className="margin-left-12 fa fa-shopping-cart" />
+    <Button
+      disabled={isDisabled}
+      onClick={increaseClick}
+      startIcon={<ShoppingCartIcon />}
+      variant="contained"
+      fullWidth
+    >
+      {t('card.addToBasket')}
     </Button>
   );
 };

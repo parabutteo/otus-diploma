@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card, CardMedia, CardContent, Typography } from '@mui/material';
 import { AddToBasket } from '../../components/AddToBasket';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { addItemToCart, removeItemFromCart } from '../../features/cart/cartSlice';
@@ -37,7 +38,6 @@ export interface IShortCard {
  *
  * В компоненте присутствуют паттерны "Destructuring props" "обратным" способом
  */
-
 export const ShortCard: React.FC<IShortCard> = ({ item }) => {
   const { name, desc, price, photo, id, category } = item;
 
@@ -65,19 +65,39 @@ export const ShortCard: React.FC<IShortCard> = ({ item }) => {
   const categoryPath = categoryMap[category.name];
 
   return (
-    <article className="card short-card" onClick={() => navigate(`/card/${categoryPath}/id/${id}`)}>
-      <img width="100%" src={photo} alt="" />
-      <div className="flex-column inner-12">
+    <Card
+      onClick={() => navigate(`/card/${categoryPath}/id/${id}`)}
+      sx={{
+        width: 300,
+        height: '100%',
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+      }}
+    >
+      <CardMedia component="img" image={photo} alt={name} height={420} sx={{ objectFit: 'cover' }} />
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         <AddToBasket
           counter={totalQuantity}
           increaseClick={addItemToCartHandler}
           decreaseClick={removeItemFromCartHandler}
         />
-        <h3 className="margin-top-12 margin-bottom-8">{name}</h3>
-        <p className="margin-bottom-12">{desc.length > 50 ? `${desc.slice(0, 50)}...` : desc}</p>
-        <span className="margin-bottom-8 txt-bold">{price}.00&nbsp;₽</span>
-        {isAdminRole && <span className="txt-gray">ID: {id}</span>}
-      </div>
-    </article>
+        <Typography variant="h6" fontWeight={600}>
+          {name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {desc.length > 50 ? `${desc.slice(0, 50)}...` : desc}
+        </Typography>
+        <Typography variant="subtitle1" fontWeight="bold">
+          {price}.00 ₽
+        </Typography>
+        {isAdminRole && (
+          <Typography variant="caption" color="text.secondary">
+            ID: {id}
+          </Typography>
+        )}
+      </CardContent>
+    </Card>
   );
 };
