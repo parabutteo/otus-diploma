@@ -32,6 +32,7 @@ import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '../app/ThemeContext.tsx';
 import { logout } from '../features/auth/authSlice.ts';
 import { clearCart } from '../features/cart/cartSlice.ts';
+import { ADMIN_ID } from '../shared/constants.ts';
 
 export const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -42,7 +43,9 @@ export const Header: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const token = useAppSelector((state) => state.auth.token);
+  const profileId = useAppSelector((state) => state.auth.profileId);
   const isUserLoggedIn = token !== null;
+  const isAdminRole = profileId === ADMIN_ID;
   const cartItems = useAppSelector((state) => state.cart.items);
   const cartItemsCounter = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -124,9 +127,11 @@ export const Header: React.FC = () => {
                   <IconButton color="inherit" aria-label="Profile" onClick={() => navigate('/profile')}>
                     <AccountCircleIcon />
                   </IconButton>
-                  <IconButton color="inherit" aria-label="Admin" onClick={() => navigate('/admin')}>
-                    <AdminPanelSettingsIcon />
-                  </IconButton>
+                  {isAdminRole && (
+                    <IconButton color="inherit" aria-label="Admin" onClick={() => navigate('/admin')}>
+                      <AdminPanelSettingsIcon />
+                    </IconButton>
+                  )}
                 </>
               )}
 
