@@ -1,109 +1,88 @@
-import * as React from "react";
-import {
-  Box,
-  Typography,
-  Stack,
-  Card,
-  CardMedia,
-  CardContent,
-  IconButton,
-  Button,
-  Container,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import {
-  addItemToCart,
-  removeItemFromCart,
-  removeFromCart,
-} from "../features/cart/cartSlice";
-import { Layout } from "../components";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import * as React from 'react';
+import { Typography, Button, Stack } from '@mui/material';
+import { useAppSelector } from '../store/hooks';
+import { clearCart } from '../features/cart/cartSlice';
+import { BasketItem, Layout, Loader } from '../components';
+import { useTranslation } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useDispatch } from 'react-redux';
+import { useMutation } from '@apollo/client';
+import { ADD_ORDER } from '../graphql/mutations/products';
 
 export const Basket: React.FC = () => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
   const cartItems = useAppSelector((state) => state.cart.items);
-  const products = useAppSelector((state) => state.products);
-  const dispatch = useAppDispatch();
+  const [loadingCount, setLoadingCount] = React.useState(0);
 
-  const fullItems = cartItems
-    .map((cartItem) => {
-      const product = products.find((p) => p.id === cartItem.id);
-      return product
-        ? {
-            ...product,
-            quantity: cartItem.quantity,
-          }
-        : null;
-    })
-    .filter(Boolean);
+  const onItemLoading = (isLoading: boolean) => {
+    setLoadingCount((count) => count + (isLoading ? 1 : -1));
+  };
 
-  const removeFromCartHandler = (id: string) => dispatch(removeFromCart(id));
-  const addItemToCartHandler = (id: string) => dispatch(addItemToCart({ id }));
-  const removeItemFromCartHandler = (id: string) => dispatch(removeItemFromCart(id));
+  const [addOrder, { data, loading, error }] = useMutation(ADD_ORDER);
+
+  const orderInput = {
+    products: cartItems.map((item) => ({
+      id: item.id,
+      quantity: item.quantity,
+    })),
+  };
+
+  const handleAddOrder = () => {
+    addOrder({ variables: { input: orderInput } })
+      .then((response) => {
+        console.log('Order ID:', response.data.orders.add.id);
+        dispatch(clearCart());
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const emptyBasket = cartItems.length === 0;
 
   return (
-    <Layout title={t("basket.title")}>
-      {fullItems.length === 0 ? (
-        <Container maxWidth="md" sx={{ textAlign: "center", py: 10 }}>
-          <ShoppingCartIcon sx={{ fontSize: 100, color: "primary.main", mb: 2 }} />
-          <Typography variant="h5" fontWeight="bold" gutterBottom>
-            {t("basket.emptyTitle")}
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-            {t("basket.emptyMessage")}
-          </Typography>
-          <Button variant="contained" onClick={() => navigate("/")}>
-            {t("basket.toCatalog")}
+    <Layout title={t('basket.title')}>
+      <Stack spacing={2}>
+        {data && (
+          <>
+            <p>Заказ успешно оформлен! ID: {data.orders.add.id}</p>
+            <p className="margin-top-8">
+              Перейти к разделу <Link to="/profile/orders">Мои заказы</Link>
+            </p>
+          </>
+        )}
+
+        {emptyBasket && (
+          <>
+            <ShoppingCartIcon sx={{ fontSize: 100, color: 'primary.main', mb: 2 }} />
+            <Typography variant="h5" fontWeight="bold" gutterBottom>
+              {t('basket.emptyTitle')}
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+              {t('basket.emptyMessage')}
+            </Typography>
+            <Button variant="contained" onClick={() => navigate('/')}>
+              {t('basket.toCatalog')}
+            </Button>
+          </>
+        )}
+
+        {loadingCount > 0 && <Loader />}
+
+        {cartItems.map((item) => (
+          <BasketItem key={item.id} id={item.id} counter={item.quantity} onLoading={onItemLoading} />
+        ))}
+
+        {error && <p className="error margin-bottom-24 margin-top-16">Ошибка при оформлении заказа: {error.message}</p>}
+
+        {!emptyBasket && (
+          <Button variant="contained" onClick={handleAddOrder} disabled={loading}>
+            Оформить заказ
           </Button>
-        </Container>
-      ) : (
-        <Stack spacing={2}>
-          {fullItems.map((item) => {
-            const id = item!.id;
-
-            return (
-              <Card key={id} sx={{ display: "flex", alignItems: "center", px: 2 }}>
-                <CardMedia
-                  component="img"
-                  image={item!.image}
-                  alt={item!.title}
-                  sx={{ width: 120, height: 120, objectFit: "cover", borderRadius: 1 }}
-                />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography fontWeight={600}>{item!.title}</Typography>
-                  <Typography>
-                    {(item!.price * item!.quantity).toFixed(2)} ₽
-                  </Typography>
-                </CardContent>
-
-                <Box display="flex" alignItems="center" border="1px solid #ccc" borderRadius={2}>
-                  <Button
-                    onClick={() => removeItemFromCartHandler(id)}
-                    sx={{ minWidth: 40, color: "error.main" }}
-                  >
-                    –
-                  </Button>
-                  <Box px={2}>{item!.quantity}</Box>
-                  <Button
-                    onClick={() => addItemToCartHandler(id)}
-                    sx={{ minWidth: 40, color: "primary.main" }}
-                  >
-                    +
-                  </Button>
-                </Box>
-
-                <IconButton onClick={() => removeFromCartHandler(id)}>
-                  <DeleteIcon />
-                </IconButton>
-              </Card>
-            );
-          })}
-        </Stack>
-      )}
+        )}
+      </Stack>
     </Layout>
   );
 };
