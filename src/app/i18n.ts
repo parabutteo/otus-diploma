@@ -41,6 +41,15 @@ const resources = {
       },
       card: {
         addToBasket: 'Add to basket'
+      },
+      profile: {
+        name: "Name",
+        namePlaceholder: "Enter your name",
+        nameRequired: "Please enter your name",
+        nameInvalid: "Invalid characters in name",
+        about: "About Me",
+        aboutPlaceholder: "Write a few words about yourself",
+        submit: "Submit"
       }
     },
   },
@@ -83,6 +92,15 @@ const resources = {
       },
       card: {
         addToBasket: 'Добавить в корзину'
+      },
+      profile: {
+        name: "Имя",
+        namePlaceholder: "Введите имя",
+        nameRequired: "Пожалуйста, введите ваше имя",
+        nameInvalid: "Недопустимые символы в имени",
+        about: "Обо мне",
+        aboutPlaceholder: "Напишите пару слов о себе",
+        submit: "Отправить"
       }
     },
   },
