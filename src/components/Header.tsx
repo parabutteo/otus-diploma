@@ -21,7 +21,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import TranslateIcon from '@mui/icons-material/Translate';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import PersonIcon from '@mui/icons-material/Person';
+import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -153,7 +153,7 @@ export const Header: React.FC = () => {
               </Menu>
 
               <IconButton color="inherit" onClick={loginHandler} aria-label={t(isUserLoggedIn ? 'logout' : 'login')}>
-                {isUserLoggedIn ? <LogoutIcon /> : <PersonIcon />}
+                {isUserLoggedIn ? <LogoutIcon /> : <LoginIcon />}
                 <span style={visuallyHidden}>{t(isUserLoggedIn ? 'logout' : 'login')}</span>
               </IconButton>
             </>
