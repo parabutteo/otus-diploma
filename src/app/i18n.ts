@@ -33,7 +33,10 @@ const resources = {
         button: 'Go to Home',
       },
       basket: {
-        title: 'Basket',
+        title: "Basket",
+        emptyTitle: "Your basket is empty",
+        emptyMessage: "Add some products to see them here.",
+        toCatalog: "Go to catalog",
       },
       catalogue: {
         title: 'Welcome to ParaVite Store',
@@ -41,6 +44,45 @@ const resources = {
       },
       card: {
         addToBasket: 'Add to basket'
+      },
+      profileForm: {
+        name: "Name",
+        namePlaceholder: "Enter your name",
+        nameRequired: "Please enter your name",
+        nameInvalid: "Invalid characters in name",
+        about: "About Me",
+        aboutPlaceholder: "Write a few words about yourself",
+        submit: "Submit"
+      },
+      profilePage: {
+        title: "Profile",
+        orders: "Go to My Orders",
+        name: "Name",
+        about: "About Me",
+        edit: "Edit",
+        noData: "No profile data"
+      },
+      
+      admin: {
+        title: 'Admin Panel',
+        add: 'Add New Product',
+        edit: 'Edit Product',
+      },
+      productForm: {
+        addTitle: "Add Product",
+        editTitle: "Edit Product",
+        title: "Title",
+        details: "Description",
+        price: "Price",
+        image: "Image URL",
+        category: "Category",
+        categories: {
+          clothes: "Clothes",
+          electronics: "Electronics",
+          other: "Other",
+        },
+        cancel: "Cancel",
+        submit: "Save",
       }
     },
   },
@@ -75,7 +117,10 @@ const resources = {
         button: 'На главную',
       },
       basket: {
-        title: 'Корзина',
+        title: "Корзина",
+        emptyTitle: "Ваша корзина пуста",
+        emptyMessage: "Добавьте товары, чтобы они появились здесь.",
+        toCatalog: "К товарам",
       },
       catalogue: {
         title: 'Добро пожаловать в ParaVite Store',
@@ -83,6 +128,44 @@ const resources = {
       },
       card: {
         addToBasket: 'Добавить в корзину'
+      },
+      profileForm: {
+        name: "Имя",
+        namePlaceholder: "Введите имя",
+        nameRequired: "Пожалуйста, введите ваше имя",
+        nameInvalid: "Недопустимые символы в имени",
+        about: "Обо мне",
+        aboutPlaceholder: "Напишите пару слов о себе",
+        submit: "Отправить"
+      },
+      profilePage: {
+        title: "Профиль",
+        orders: "Перейти к моим заказам",
+        name: "Имя",
+        about: "Обо мне",
+        edit: "Редактировать",
+        noData: "Нет данных профиля"
+      },
+      admin: {
+        title: 'Администраторская панель',
+        add: 'Добавить новый товар',
+        edit: 'Редактировать товар',
+      },
+      productForm: {
+        addTitle: "Добавить товар",
+        editTitle: "Редактировать товар",
+        title: "Название",
+        details: "Описание",
+        price: "Цена",
+        image: "Ссылка на изображение",
+        category: "Категория",
+        categories: {
+          clothes: "Одежда",
+          electronics: "Электроника",
+          other: "Другое",
+        },
+        cancel: "Отмена",
+        submit: "Сохранить",
       }
     },
   },

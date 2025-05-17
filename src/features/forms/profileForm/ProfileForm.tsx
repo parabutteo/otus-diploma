@@ -1,14 +1,13 @@
-import { useForm } from 'react-hook-form';
 import React from 'react';
-import clsx from 'clsx';
-import { Button } from '@mui/material';
-import type { ProfileT } from '../../../pages/Profile';
+import { useForm } from 'react-hook-form';
+import { Box, Button, Stack, TextField, Paper } from '@mui/material';
+import { type ProfileT } from '../../../pages/Profile';
+import { useTranslation } from 'react-i18next';
 
 interface IProfileForm {
-  /** Опциональные классы */
   className?: string;
   form: ProfileT;
-  setForm: React.Dispatch<React.SetStateAction<ProfileT>>;
+  setForm: React.Dispatch<React.SetStateAction<ProfileT | null>>;
   sendHandler: () => void;
 }
 
@@ -17,17 +16,6 @@ type TProfileFormData = {
   aboutMe: string;
 };
 
-/**
- * Компонент формы в профиле
- *
- * @param className опциональные css классы
- * @param form стейт формы
- * @param setForm диспатч формы
- * @param sendHandler обработчик отправки формы
- *
- * @returns React.FC
- */
-
 export const ProfileForm: React.FC<IProfileForm> = ({ className, form, setForm, sendHandler }) => {
   const {
     register,
@@ -35,6 +23,9 @@ export const ProfileForm: React.FC<IProfileForm> = ({ className, form, setForm, 
     reset,
     formState: { errors },
   } = useForm<TProfileFormData>();
+  const { t, i18n } = useTranslation();
+
+  const namePattern = i18n.language === 'en' ? /^[A-Za-z\s]+$/ : /^[А-Яа-я\s]+$/;
 
   const onSubmit = (data: TProfileFormData) => {
     console.log('Введенные данные в форме профиля: ', data);
@@ -43,42 +34,52 @@ export const ProfileForm: React.FC<IProfileForm> = ({ className, form, setForm, 
   };
 
   return (
-    <form className={clsx('box', 'form', className)} onSubmit={handleSubmit(onSubmit)}>
-      <label htmlFor="name">Имя</label>
-      <div className="grid-content">
-        <input
-          {...register('name', {
-            value: form.name,
-            required: 'Пожалуйста, введите ваше имя',
-            pattern: {
-              value: /^[А-Яа-я\s]+$/g,
-              message: 'Недопустимые символы в имени',
-            },
-          })}
-          className={clsx(errors.name && 'error-field')}
-          type="text"
-          id="name"
-          placeholder="Введите имя"
-          onChange={(ev) => setForm({ ...form, name: ev.target.value })}
-        />
-        {errors.name && <p className="error">{errors.name.message}</p>}
-      </div>
+    <Paper
+      component="form"
+      elevation={3}
+      onSubmit={handleSubmit(onSubmit)}
+      sx={{ p: 4, borderRadius: 3 }}
+      className={className}
+    >
+      <Stack spacing={3}>
+        <Box>
+          <TextField
+            fullWidth
+            label={t('profileForm.name')}
+            placeholder={t('profileForm.namePlaceholder')}
+            defaultValue={form.name}
+            {...register('name', {
+              required: t('profileForm.nameRequired'),
+              pattern: {
+                value: namePattern,
+                message: t('profileForm.nameInvalid'),
+              },
+            })}
+            error={!!errors.name}
+            helperText={errors.name?.message}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+          />
+        </Box>
 
-      <label htmlFor="aboutMe">Обо мне</label>
-      <textarea
-        {...register('aboutMe', {
-          value: String(form.aboutMe),
-        })}
-        id="aboutMe"
-        className="grid-content"
-        rows={4}
-        placeholder="Напишите пару слов о себе"
-        onChange={(ev) => setForm({ ...form, aboutMe: ev.target.value })}
-      />
+        <Box>
+          <TextField
+            fullWidth
+            multiline
+            minRows={4}
+            label={t('profileForm.about')}
+            placeholder={t('profileForm.aboutPlaceholder')}
+            defaultValue={form.aboutMe}
+            {...register('aboutMe')}
+            onChange={(e) => setForm({ ...form, aboutMe: e.target.value })}
+          />
+        </Box>
 
-      <Button className="small" type="submit">
-        Отправить
-      </Button>
-    </form>
+        <Box>
+          <Button type="submit" variant="contained">
+            {t('profileForm.submit')}
+          </Button>
+        </Box>
+      </Stack>
+    </Paper>
   );
 };
