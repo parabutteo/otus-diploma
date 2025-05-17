@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { Box, Button, Container, Grid } from '@mui/material';
-import { Layout, Loader } from '../components';
+import { Layout } from '../components';
+import { Loader } from '../components/Loader';
 import { ShortCard, type IShortCardItem } from '../components/Card/ShortCard';
 import { useTranslation } from 'react-i18next';
-import { GET_PRODUCTS } from '../graphql/queries/products';
 import { useQuery } from '@apollo/client';
+import { GET_PRODUCTS } from '../graphql/queries/products';
 import { COMMAND_ID } from '../shared/constants';
 
 export const Catalog: React.FC = () => {
-  const [visibleCount, setVisibleCount] = React.useState(4);
   const { t } = useTranslation();
+
+  const [visibleCount, setVisibleCount] = React.useState<number>(8);
 
   // Параметры запроса
   const input = {
@@ -46,21 +48,21 @@ export const Catalog: React.FC = () => {
     setVisibleCount((prev) => prev + 4);
   };
 
+  if (loading) return <Loader />;
+  if (error) return <Layout title={t('catalogue.title')}><Box p={4}>Ошибка загрузки</Box></Layout>;
+
   return (
     <Layout title={t('catalogue.title')}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
-        {loading && <Loader />}
         <Grid container spacing={3} columns={12} component="div">
-          {!loading &&
-            !error &&
-            visibleProducts.length > 0 &&
-            visibleProducts.map((item) => (
-              <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }} component="div">
-                <ShortCard item={item} key={item.id} />
-              </Grid>
-            ))}
+          {visibleProducts.map((item) => (
+            <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }} component="div">
+              <ShortCard item={item} />
+            </Grid>
+          ))}
         </Grid>
-        {!loading && !error && (
+
+        {visibleCount < normalizedProducts.length && (
           <Box display="flex" justifyContent="center" mt={4}>
             <Button variant="outlined" onClick={showMoreBtnHandler}>
               {t('catalogue.showMore')}
