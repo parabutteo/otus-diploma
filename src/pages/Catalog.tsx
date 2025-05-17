@@ -7,11 +7,23 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../graphql/queries/products';
 import { COMMAND_ID } from '../shared/constants';
+import { useMediaQuery, useTheme } from '@mui/material';
 
 export const Catalog: React.FC = () => {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const isLgUp = useMediaQuery(theme.breakpoints.up('lg'));
+  const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
-  const [visibleCount, setVisibleCount] = React.useState<number>(8);
+  const [visibleCount, setVisibleCount] = React.useState<number>(3);
+
+  React.useEffect(() => {
+    if (isLgUp) setVisibleCount(12);
+    else if (isMdUp) setVisibleCount(9);
+    else if (isSmUp) setVisibleCount(6);
+    else setVisibleCount(3);
+  }, [isLgUp, isMdUp, isSmUp]);
 
   // Параметры запроса
   const input = {
@@ -45,7 +57,7 @@ export const Catalog: React.FC = () => {
 
   // Обработчик кнопки "Показать ещё"
   const showMoreBtnHandler = (): void => {
-    setVisibleCount((prev) => prev + 4);
+    setVisibleCount((prev) => prev + (isMdUp ? 4 : 3));
   };
 
   if (loading) return <Loader />;
