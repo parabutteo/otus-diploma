@@ -58,6 +58,11 @@ const resources = {
         about: "About Me",
         edit: "Edit",
         noData: "No profile data"
+      },
+      admin: {
+        title: 'Admin Panel',
+        add: 'Add New Product',
+        edit: 'Edit Product',
       }
     },
   },
@@ -117,6 +122,11 @@ const resources = {
         about: "Обо мне",
         edit: "Редактировать",
         noData: "Нет данных профиля"
+      },
+      admin: {
+        title: 'Администраторская панель',
+        add: 'Добавить новый товар',
+        edit: 'Редактировать товар',
       }
     },
   },
