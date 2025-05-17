@@ -24,12 +24,15 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { visuallyHidden } from '@mui/utils';
 import { useAppSelector, useAppDispatch } from '../store/hooks.ts';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '../app/ThemeContext.tsx';
 import { logout } from '../features/auth/authSlice.ts';
 import { clearCart } from '../features/cart/cartSlice.ts';
+import { ADMIN_ID } from '../shared/constants.ts';
 
 export const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -40,9 +43,9 @@ export const Header: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const token = useAppSelector((state) => state.auth.token);
-  // ВДРУГ БУДЕМ ПОЛУЧАТЬ ЮЗЕРНЕЙМ
-  // const username = useAppSelector((state) => state.auth.username); // предполагается, что он есть
+  const profileId = useAppSelector((state) => state.auth.profileId);
   const isUserLoggedIn = token !== null;
+  const isAdminRole = profileId === ADMIN_ID;
   const cartItems = useAppSelector((state) => state.cart.items);
   const cartItemsCounter = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -90,7 +93,7 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <AppBar position="static" color="primary" elevation={3}>
+      <AppBar position="sticky" color="primary" elevation={3} sx={{ top: 0 }}>
         <Toolbar>
           {isMobile && (
             <>
@@ -119,6 +122,19 @@ export const Header: React.FC = () => {
                 </Badge>
               </IconButton>
 
+              {isUserLoggedIn && (
+                <>
+                  <IconButton color="inherit" aria-label="Profile" onClick={() => navigate('/profile')}>
+                    <AccountCircleIcon />
+                  </IconButton>
+                  {isAdminRole && (
+                    <IconButton color="inherit" aria-label="Admin" onClick={() => navigate('/admin')}>
+                      <AdminPanelSettingsIcon />
+                    </IconButton>
+                  )}
+                </>
+              )}
+
               <IconButton color="inherit" onClick={toggleTheme} aria-label="Toggle theme">
                 {mode === 'dark' ? <DarkModeIcon /> : <LightModeIcon />}
               </IconButton>
@@ -140,13 +156,6 @@ export const Header: React.FC = () => {
                 {isUserLoggedIn ? <LogoutIcon /> : <PersonIcon />}
                 <span style={visuallyHidden}>{t(isUserLoggedIn ? 'logout' : 'login')}</span>
               </IconButton>
-
-              {/* ЕСЛИ БУДЕМ ПОЛУЧАТЬ ЮЗЕРНЕЙМ */}
-              {/* {isUserLoggedIn && (
-                <Typography variant="body2" sx={{ ml: 1 }}>
-                  {username}
-                </Typography>
-              )} */}
             </>
           )}
         </Toolbar>
