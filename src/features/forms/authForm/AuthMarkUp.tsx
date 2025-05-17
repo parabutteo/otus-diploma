@@ -3,14 +3,14 @@ import clsx from 'clsx';
 import type { FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormReset } from 'react-hook-form';
 import type { NavigateFunction } from 'react-router-dom';
 import type { TAuthFormData } from './types';
-import { Button } from '@mui/material';
+import { Button, Stack, TextField } from '@mui/material';
 
 interface IAuthMarkUp {
   errors: FieldErrors<TAuthFormData>;
   register: UseFormRegister<TAuthFormData>;
   errorLogin: string;
   reset: UseFormReset<TAuthFormData>;
-  handleSubmit: UseFormHandleSubmit<TAuthFormData, undefined>;
+  handleSubmit: UseFormHandleSubmit<TAuthFormData>;
   onSubmit: (data: TAuthFormData) => Promise<void>;
   navigation: NavigateFunction;
   isRegProcedure: boolean;
@@ -26,76 +26,79 @@ export const AuthMarkUp: React.FC<IAuthMarkUp> = ({
   navigation,
   isRegProcedure,
 }) => (
-  <div className="flex-column authorize-container">
-    <h3 className="margin-bottom-8">{isRegProcedure ? 'Регистрация' : 'Авторизация'}</h3>
-    <form className="box form authorize" onSubmit={handleSubmit(onSubmit)}>
-      <label htmlFor="login">Логин</label>
-      <div className="grid-content">
-        <input
+  <>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Stack spacing={2}>
+        <TextField
           {...register('login', {
             required: 'Значение поля "логин" пустое',
-            pattern: !isRegProcedure && {
-              value: /\S+@\S+\.\S+/,
-              message: 'Введите корректный адрес электронной почты',
-            },
+            pattern: !isRegProcedure
+              ? {
+                  value: /\S+@\S+\.\S+/,
+                  message: 'Введите корректный адрес электронной почты',
+                }
+              : undefined,
           })}
           className={clsx((errors.login || errorLogin) && 'error-field')}
           type="text"
           id="login"
           placeholder="Укажите логин"
+          fullWidth
+          variant="outlined"
         />
         {errors.login && !errorLogin && <p className="error">{errors.login.message}</p>}
         {errorLogin && <p className="error">{errorLogin}</p>}
-      </div>
 
-      <label htmlFor="pass">Пароль</label>
-      <div className="grid-content">
-        <input
+        <TextField
           {...register('pass', {
             required: 'Значение поля "пароль" пустое',
-            minLength: isRegProcedure && {
-              value: 8,
-              message: 'Пароль должен содержать минимум 8 символов',
-            },
+            minLength: isRegProcedure
+              ? {
+                  value: 8,
+                  message: 'Пароль должен содержать минимум 8 символов',
+                }
+              : undefined,
           })}
           className={clsx(errors.pass && 'error-field')}
           type="password"
           id="pass"
           placeholder="Укажите пароль"
           autoComplete="currentPassword"
+          fullWidth
+          variant="outlined"
         />
         {errors.pass && <p className="error">{errors.pass.message}</p>}
-      </div>
 
-      <div className="grid-content flex-row margin-top-12">
-        <Button className="primary small" type="submit">
-          {isRegProcedure ? 'Зарегистрироваться' : 'Войти'}
-        </Button>
-        {!isRegProcedure && (
-          <Button
-            className="margin-left-12 small"
-            type="button"
-            onClick={() => {
-              navigation('/reg');
-              reset();
-            }}
-          >
-            Зарегистрироваться
+        <Stack direction="row" spacing={2}>
+          <Button variant="contained" type="submit">
+            {isRegProcedure ? 'Зарегистрироваться' : 'Войти'}
           </Button>
-        )}
-        {isRegProcedure && (
-          <Button
-            className="margin-left-12 small"
-            type="button"
-            onClick={() => {
-              navigation('/auth');
-              reset();
-            }}
-          >
-            Назад ко входу
-          </Button>
-        )}
-      </div>
+          {!isRegProcedure && (
+            <Button
+              variant="outlined"
+              type="button"
+              onClick={() => {
+                navigation('/reg');
+                reset();
+              }}
+            >
+              Зарегистрироваться
+            </Button>
+          )}
+          {isRegProcedure && (
+            <Button
+              variant="outlined"
+              type="button"
+              onClick={() => {
+                navigation('/auth');
+                reset();
+              }}
+            >
+              Назад ко входу
+            </Button>
+          )}
+        </Stack>
+      </Stack>
     </form>
-  </div>
+  </>
 );

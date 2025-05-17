@@ -1,13 +1,13 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useAppDispatch } from '../../../store/hooks';
-import { setToken } from '../../../features/auth/authSlice';
-import { randomNumberGenerator } from '../../../features/createRandomProduct';
+import { setProfileID, setToken } from '../../../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { singup } from '../../../shared/api/auth/singup';
-import { backendErrorMessages } from '../../../shared/constants';
+import { backendErrorMessages, COMMAND_ID } from '../../../shared/constants';
 import { AuthMarkUp } from './AuthMarkUp';
 import type { TAuthFormData } from './types';
+import { useMutation, ApolloError } from '@apollo/client';
+import { SIGN_IN, SIGN_UP } from '../../../graphql/mutations/profile';
 
 // Тип для видов формы
 type TAuth = 'reg' | 'auth';
@@ -36,7 +36,6 @@ export const AuthForm: React.FC<IAuthForm> = ({ authType }) => {
     handleSubmit,
     reset,
     formState: { errors },
-    getValues,
   } = useForm<TAuthFormData>();
 
   // Признак формы регистрации
@@ -45,45 +44,59 @@ export const AuthForm: React.FC<IAuthForm> = ({ authType }) => {
   const navigation = useNavigate();
   const dispatch = useAppDispatch();
 
-  // Хендлер для выдачи токена при авторизации
-  // Если токен админа -- формируем админский токен, иначе случайный
-  const tokenizeHandler = (): void => {
-    if (getValues('login') === 'admin@admin.ru') {
-      dispatch(setToken('admin'));
-    } else {
-      const tokenValue = randomNumberGenerator(1000, 9999);
-      dispatch(setToken(tokenValue.toString()));
-    }
-  };
-
   // Стейт для заполнения ошибки по логину, приходящей с сервера
   const [errorLogin, setErrorLogin] = React.useState<string | null>(null);
+
+  // GraphQL мутация регистрации
+  const [signUp] = useMutation(SIGN_UP);
+  // GraphQL мутация авторизации
+  const [signIn] = useMutation(SIGN_IN);
 
   const onSubmit = async (data: TAuthFormData) => {
     console.log(`Введенные данные в форме ${isRegProcedure ? 'регистрации' : 'авторизации'}: `, data);
 
     try {
-      if (isRegProcedure) {
-        const response = await singup(data.login, data.pass);
-        console.log('Результат запроса:', response);
+      const response = isRegProcedure
+        ? await signUp({
+            variables: {
+              email: data.login,
+              password: data.pass,
+              commandId: COMMAND_ID,
+            },
+          })
+        : await signIn({
+            variables: {
+              email: data.login,
+              password: data.pass,
+            },
+          });
+      console.log('Результат запроса:', response);
 
-        if (response?.errors) {
-          const code = response.errors[0].extensions.code;
-          setErrorLogin(backendErrorMessages[code] || 'Неизвестная ошибка');
-        } else if (response?.token) {
-          dispatch(setToken(response.token));
-          reset();
-          navigation('/');
-        } else {
-          setErrorLogin('Ошибка: токен не получен от сервера');
-        }
-      } else {
-        tokenizeHandler();
+      const token = isRegProcedure ? response.data?.profile?.signup?.token : response.data?.profile?.signin?.token;
+      const pid = isRegProcedure
+        ? response.data?.profile?.signup?.profile?.id
+        : response.data?.profile?.signin?.profile?.id;
+
+      if (token) {
+        dispatch(setToken(token));
+        dispatch(setProfileID(pid));
         reset();
         navigation('/');
+      } else {
+        setErrorLogin('Ошибка: токен не получен от сервера');
       }
     } catch (error) {
-      setErrorLogin('Ошибка соединения с сервером');
+      if (error instanceof ApolloError) {
+        if (error.graphQLErrors.length > 0) {
+          error.graphQLErrors.forEach(({ extensions }) => {
+            const code = extensions?.code;
+            console.log('GraphQL error: ' + code);
+            setErrorLogin(backendErrorMessages[code as string] || 'Неизвестная ошибка');
+          });
+        }
+      } else {
+        setErrorLogin('Ошибка соединения с сервером');
+      }
     }
   };
 
