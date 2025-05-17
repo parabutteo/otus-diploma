@@ -1,134 +1,83 @@
-import React from "react";
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Typography,
-} from "@mui/material";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { addItemToCart, removeItemFromCart } from "../../features/cart/cartSlice";
-import { useTranslation } from "react-i18next";
+import React from 'react';
+import { AddToBasket } from '../../components/AddToBasket';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { addItemToCart, removeItemFromCart } from '../../features/cart/cartSlice';
+import { GET_PROFILE_ID } from '../../graphql/queries/profile';
+import { useQuery } from '@apollo/client';
+import { ADMIN_ID, categoryMap } from '../../shared/constants';
+import { useNavigate } from 'react-router-dom';
+
+interface Category {
+  name: string;
+}
 
 export interface IShortCardItem {
   /** Идентификатор */
   id: string;
+  /** ID команды */
+  commandId?: string;
   /** Заголовок */
-  title: string;
+  name: string;
   /** Описание */
-  details: string;
+  desc: string;
   /** Цена */
   price: number;
   /** Главное изображение */
-  image: string;
+  photo: string;
   /** Категория */
-  category: string;
+  category: Category;
 }
 
 export interface IShortCard {
   item: IShortCardItem;
 }
 
+/**
+ * Краткая карточка товара
+ *
+ * В компоненте присутствуют паттерны "Destructuring props" "обратным" способом
+ */
+
 export const ShortCard: React.FC<IShortCard> = ({ item }) => {
-  const { title, details, price, image } = item;
+  const { name, desc, price, photo, id, category } = item;
+
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const navigate = useNavigate();
 
-  const cartItems = useAppSelector((state) => state.cart.items);
-  const totalQuantity = cartItems.reduce(
-    (acc, i) => (i.id === item.id ? acc + i.quantity : acc),
-    0,
-  );
-
-  const addItemToCartHandler = () => {
+  const addItemToCartHandler = (event: React.MouseEvent): void => {
+    event.stopPropagation();
     dispatch(addItemToCart({ id: item.id }));
   };
 
+  const removeItemFromCartHandler = (event: React.MouseEvent): void => {
+    event.stopPropagation();
+    dispatch(removeItemFromCart(item.id));
+  };
+
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const totalQuantity = cartItems.reduce((acc, items) => (items.id === item.id ? acc + items.quantity : acc), 0);
+
+  // Признак админской роли
+  const { data: pid } = useQuery(GET_PROFILE_ID);
+  const profileId = pid?.profile?.id || null;
+  const isAdminRole = profileId === ADMIN_ID;
+
+  const categoryPath = categoryMap[category.name];
+
   return (
-    <Card
-      sx={{
-        width: 300,
-        height: 625,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        mx: 'auto',
-      }}
-    >
-      <CardMedia
-        component="img"
-        image={image}
-        alt={title}
-        height={450}
-        sx={{
-          width: '100%',
-          objectFit: 'cover',
-        }}
-      />
-
-      <CardActions sx={{ px: 2, pt: 2, justifyContent: 'center' }}>
-        {totalQuantity > 0 ? (
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              border: '1px solid',
-              borderColor: 'divider',
-              borderRadius: 2,
-              overflow: 'hidden',
-            }}
-          >
-            <Button
-              onClick={() => dispatch(removeItemFromCart(item.id))}
-              sx={{ minWidth: 40, borderRadius: 0, color: 'error.main' }}
-            >
-              –
-            </Button>
-            <Box
-              sx={{
-                width: 48,
-                textAlign: 'center',
-                px: 1,
-                py: 0.5,
-                fontWeight: 500,
-                fontSize: '1rem',
-              }}
-            >
-              {totalQuantity}
-            </Box>
-            <Button
-              onClick={() => dispatch(addItemToCart({ id: item.id }))}
-              sx={{ minWidth: 40, borderRadius: 0, color: 'primary.main' }}
-            >
-              +
-            </Button>
-          </Box>
-        ) : (
-          <Button
-            variant="contained"
-            fullWidth
-            endIcon={<ShoppingCartIcon />}
-            onClick={addItemToCartHandler}
-          >
-            {t('card.addToBasket')}
-          </Button>
-        )}
-      </CardActions>
-
-      <CardContent sx={{ pt: 1 }}>
-        <Typography variant="subtitle1" fontWeight={600}>
-          {title}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" mb={1}>
-          {details}
-        </Typography>
-        <Typography variant="subtitle1" fontWeight="bold">
-          {price.toFixed(2)} ₽
-        </Typography>
-      </CardContent>
-    </Card>
+    <article className="card short-card" onClick={() => navigate(`/card/${categoryPath}/id/${id}`)}>
+      <img width="100%" src={photo} alt="" />
+      <div className="flex-column inner-12">
+        <AddToBasket
+          counter={totalQuantity}
+          increaseClick={addItemToCartHandler}
+          decreaseClick={removeItemFromCartHandler}
+        />
+        <h3 className="margin-top-12 margin-bottom-8">{name}</h3>
+        <p className="margin-bottom-12">{desc.length > 50 ? `${desc.slice(0, 50)}...` : desc}</p>
+        <span className="margin-bottom-8 txt-bold">{price}.00&nbsp;₽</span>
+        {isAdminRole && <span className="txt-gray">ID: {id}</span>}
+      </div>
+    </article>
   );
 };
