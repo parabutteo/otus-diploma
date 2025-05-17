@@ -4,3 +4,6 @@ export { LangAndHomeControls } from './LangAndHomeControls';
 export { Layout } from './Layout';
 export { Loader } from './Loader';
 export { AddToBasket } from './AddToBasket';
+export { BasketItem } from './Card/BasketItem';
+export { ShortCard } from './Card/ShortCard';
+export { FullCard } from './Card/FullCard';
