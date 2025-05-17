@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { Typography, Button, Stack } from '@mui/material';
+import {
+  Typography,
+  Button,
+  Stack,
+  Box,
+  Paper,
+  Link as MuiLink,
+} from '@mui/material';
 import { useAppSelector } from '../store/hooks';
 import { clearCart } from '../features/cart/cartSlice';
 import { BasketItem, Layout, Loader } from '../components';
@@ -12,7 +19,6 @@ import { ADD_ORDER } from '../graphql/mutations/products';
 
 export const Basket: React.FC = () => {
   const navigate = useNavigate();
-
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const cartItems = useAppSelector((state) => state.cart.items);
@@ -44,18 +50,25 @@ export const Basket: React.FC = () => {
 
   return (
     <Layout title={t('basket.title')}>
-      <Stack spacing={2}>
+      <Stack spacing={3} alignItems="center">
         {data && (
-          <>
-            <p>Заказ успешно оформлен! ID: {data.orders.add.id}</p>
-            <p className="margin-top-8">
-              Перейти к разделу <Link to="/profile/orders">Мои заказы</Link>
-            </p>
-          </>
+          <Paper elevation={2} sx={{ p: 3, width: '100%', maxWidth: 600 }}>
+            <Typography variant="h6" gutterBottom>
+              {t('basket.orderSuccess')}
+            </Typography>
+            <Typography>
+              {t('basket.orderId')}: <strong>{data.orders.add.id}</strong>
+            </Typography>
+            <Typography sx={{ mt: 2 }}>
+              <MuiLink component={Link} to="/profile/orders" underline="hover">
+                {t('basket.goToOrders')}
+              </MuiLink>
+            </Typography>
+          </Paper>
         )}
 
         {emptyBasket && (
-          <>
+          <Box textAlign="center" py={6}>
             <ShoppingCartIcon sx={{ fontSize: 100, color: 'primary.main', mb: 2 }} />
             <Typography variant="h5" fontWeight="bold" gutterBottom>
               {t('basket.emptyTitle')}
@@ -66,20 +79,32 @@ export const Basket: React.FC = () => {
             <Button variant="contained" onClick={() => navigate('/')}>
               {t('basket.toCatalog')}
             </Button>
-          </>
+          </Box>
         )}
 
         {loadingCount > 0 && <Loader />}
 
-        {cartItems.map((item) => (
-          <BasketItem key={item.id} id={item.id} counter={item.quantity} onLoading={onItemLoading} />
-        ))}
+        <Stack spacing={2} width="100%">
+          {cartItems.map((item) => (
+            <BasketItem key={item.id} id={item.id} counter={item.quantity} onLoading={onItemLoading} />
+          ))}
+        </Stack>
 
-        {error && <p className="error margin-bottom-24 margin-top-16">Ошибка при оформлении заказа: {error.message}</p>}
+        {error && (
+          <Paper elevation={1} sx={{ p: 2, backgroundColor: 'error.light', color: 'error.contrastText' }}>
+            <Typography>{t('basket.orderError')}: {error.message}</Typography>
+          </Paper>
+        )}
 
         {!emptyBasket && (
-          <Button variant="contained" onClick={handleAddOrder} disabled={loading}>
-            Оформить заказ
+          <Button
+            variant="contained"
+            onClick={handleAddOrder}
+            disabled={loading}
+            size="large"
+            sx={{ mt: 3 }}
+          >
+            {t('basket.placeOrder')}
           </Button>
         )}
       </Stack>

@@ -37,6 +37,11 @@ const resources = {
         emptyTitle: "Your basket is empty",
         emptyMessage: "Add some products to see them here.",
         toCatalog: "Go to catalog",
+        orderSuccess: "Order placed successfully!",
+        orderId: "Order ID",
+        goToOrders: "Go to My Orders",
+        orderError: "An error occurred while placing your order.",
+        placeOrder: "Place Order",
       },
       catalogue: {
         title: 'Welcome to ParaVite Store',
@@ -121,6 +126,11 @@ const resources = {
         emptyTitle: "Ваша корзина пуста",
         emptyMessage: "Добавьте товары, чтобы они появились здесь.",
         toCatalog: "К товарам",
+        orderSuccess: "Заказ успешно оформлен!",
+        orderId: "Номер заказа",
+        goToOrders: "Перейти к заказам",
+        orderError: "Ошибка при оформлении заказа.",
+        placeOrder: "Оформить заказ",
       },
       catalogue: {
         title: 'Добро пожаловать в ParaVite Store',
