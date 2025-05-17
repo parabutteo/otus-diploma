@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Box, Button, Container, Grid } from '@mui/material';
-import { Layout } from '../components';
+import { Layout, Loader } from '../components';
 import { ShortCard, type IShortCardItem } from '../components/Card/ShortCard';
 import { useTranslation } from 'react-i18next';
 import { GET_PRODUCTS } from '../graphql/queries/products';
@@ -49,7 +49,7 @@ export const Catalog: React.FC = () => {
   return (
     <Layout title={t('catalogue.title')}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
-        {loading && 'loading'}
+        {loading && <Loader />}
         <Grid container spacing={3} columns={12} component="div">
           {!loading &&
             !error &&
@@ -60,11 +60,13 @@ export const Catalog: React.FC = () => {
               </Grid>
             ))}
         </Grid>
-        <Box display="flex" justifyContent="center" mt={4}>
-          <Button variant="outlined" onClick={showMoreBtnHandler}>
-            {t('catalogue.showMore')}
-          </Button>
-        </Box>
+        {!loading && !error && (
+          <Box display="flex" justifyContent="center" mt={4}>
+            <Button variant="outlined" onClick={showMoreBtnHandler}>
+              {t('catalogue.showMore')}
+            </Button>
+          </Box>
+        )}
       </Container>
     </Layout>
   );
