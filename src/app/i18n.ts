@@ -62,10 +62,27 @@ const resources = {
         edit: "Edit",
         noData: "No profile data"
       },
+      
       admin: {
         title: 'Admin Panel',
         add: 'Add New Product',
         edit: 'Edit Product',
+      },
+      productForm: {
+        addTitle: "Add Product",
+        editTitle: "Edit Product",
+        title: "Title",
+        details: "Description",
+        price: "Price",
+        image: "Image URL",
+        category: "Category",
+        categories: {
+          clothes: "Clothes",
+          electronics: "Electronics",
+          other: "Other",
+        },
+        cancel: "Cancel",
+        submit: "Save",
       }
     },
   },
@@ -133,6 +150,22 @@ const resources = {
         title: 'Администраторская панель',
         add: 'Добавить новый товар',
         edit: 'Редактировать товар',
+      },
+      productForm: {
+        addTitle: "Добавить товар",
+        editTitle: "Редактировать товар",
+        title: "Название",
+        details: "Описание",
+        price: "Цена",
+        image: "Ссылка на изображение",
+        category: "Категория",
+        categories: {
+          clothes: "Одежда",
+          electronics: "Электроника",
+          other: "Другое",
+        },
+        cancel: "Отмена",
+        submit: "Сохранить",
       }
     },
   },

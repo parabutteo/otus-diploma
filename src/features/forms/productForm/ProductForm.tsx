@@ -1,155 +1,102 @@
-import React from 'react';
+import * as React from 'react';
+import {
+  Button,
+  MenuItem,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useForm } from 'react-hook-form';
-import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch } from '../../../store/hooks';
-import { addProduct, editProduct, removeProduct } from '../../../features/products/productsSlice';
-import { Button } from '@mui/material';
+import { addProduct, editProduct } from '../../products/productsSlice';
 
-// Тип для видов формы
-type TProcedure = 'add' | 'edit';
-
-type TAuthFormData = {
-  id: string;
-  title: string;
-  category: string;
-  image: string;
-  price: number;
-  details: string;
-};
-
-interface IProductForm {
-  /** Вид формы */
-  procedureType: TProcedure;
+interface ProductFormProps {
+  /** Признак добавления нового товара */
+  isAddProcedure: boolean;
+  /** Значения по умолчанию */
+  defaultFieldValue?: {
+    /** ID товара */
+    id: string;
+    /** Название */
+    title: string;
+    /** Описание */
+    details: string;
+    /** Цена */
+    price: number;
+    /** Ссылка на изображение */
+    image: string;
+    /** Категория */
+    category: string;
+  };
+  /** Обработчик удаления по ID */
+  deleteHandler: (id: string) => void;
 }
 
-/**
- * Компонент добавления/редактирования продукта
- *
- * Тип формы прокидывается пропсом
- *
- * @param procedureType тип процедуры
- *
- * @returns React.FC
- */
-
-export const ProductForm: React.FC<IProductForm> = ({ procedureType }) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    watch,
-    formState: { errors },
-  } = useForm<TAuthFormData>();
+export const ProductForm: React.FC<ProductFormProps> = ({
+  isAddProcedure,
+  defaultFieldValue,
+  deleteHandler,
+}) => {
+  const { register, handleSubmit, reset, watch } = useForm({
+    defaultValues: defaultFieldValue || {
+      title: '',
+      details: '',
+      price: 0,
+      image: '',
+      category: '',
+    },
+  });
 
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
-  // Признак формы с типом "добавление товара"
-  const isAddProcedure = procedureType === 'add';
-
-  // Заглушка для эмуляции вывода значения из базы
-  const defaultFieldValue = 'какое-то имеющееся значение поля';
-
-  const onSubmit = (data: TAuthFormData) => {
-    console.log(`Введенные данные в форме ${isAddProcedure ? 'добавления товара' : 'редактирования товара'}: `, data);
-    isAddProcedure ? dispatch(addProduct(data)) : dispatch(editProduct(data));
-    reset();
-  };
-
-  const deleteHandler = (id: string): void => {
-    if (watch('id') !== null && watch('id') !== '') {
-      console.log('Удалён товар с ID ' + watch('id'));
-      dispatch(removeProduct(id));
-      reset();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onSubmit = (data: any) => {
+    console.log('submit', data);
+    if (isAddProcedure) {
+      dispatch(addProduct(data));
+    } else {
+      dispatch(editProduct(data));
     }
-  };
-
-  // Эффект для обнуления формы при смене procedureType
-  React.useEffect(() => {
     reset();
-  }, [procedureType, reset]);
+  };
 
   return (
-    <form className="margin-top-24 form" onSubmit={handleSubmit(onSubmit)}>
-      <label htmlFor="login">ID</label>
-      <input
-        {...register('id', {
-          value: null,
-          required: true,
-        })}
-        className={clsx(errors.id && 'error-field', 'grid-content')}
-        type="text"
-        id="id"
-        placeholder="Введите идентификатор"
-      />
-      <label htmlFor="login">Название</label>
-      <input
-        {...register('title', {
-          value: !isAddProcedure ? defaultFieldValue : null,
-          required: true,
-        })}
-        className={clsx(errors.title && 'error-field', 'grid-content')}
-        type="text"
-        id="title"
-        placeholder="Введите название"
-      />
+    <Paper
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      sx={{ p: 4, borderRadius: 3, maxWidth: 500, mx: 'auto' }}
+    >
+      <Typography variant="h6" fontWeight="bold" gutterBottom>
+        {isAddProcedure ? t('productForm.addTitle') : t('productForm.editTitle')}
+      </Typography>
 
-      <label htmlFor="category">Категория</label>
-      <select
-        {...register('category', {
-          value: !isAddProcedure ? 't-shirts' : '',
-          required: true,
-        })}
-        className={clsx(errors.category && 'error-field', 'grid-content')}
-        id="category"
-      >
-        <option value="">Выберите категорию</option>
-        <option value="t-shirts">Футболки, рубашки</option>
-        <option value="clothes">Верхняя одежда</option>
-        <option value="boots">Обувь</option>
-      </select>
+      <Stack spacing={2}>
+        <TextField label={t('productForm.title')} fullWidth {...register('title')} />
+        <TextField label={t('productForm.details')} fullWidth {...register('details')} />
+        <TextField label={t('productForm.price')} type="number" fullWidth {...register('price')} />
+        <TextField label={t('productForm.image')} fullWidth {...register('image')} />
+        <TextField label={t('productForm.category')} select fullWidth {...register('category')}>
+          <MenuItem value="clothes">{t('productForm.categories.clothes')}</MenuItem>
+          <MenuItem value="electronics">{t('productForm.categories.electronics')}</MenuItem>
+          <MenuItem value="other">{t('productForm.categories.other')}</MenuItem>
+        </TextField>
 
-      <label htmlFor="imgPath">Путь к изображению</label>
-      <textarea
-        {...register('image', {
-          value: !isAddProcedure ? defaultFieldValue : undefined,
-          required: true,
-        })}
-        className={clsx(errors.title && 'error-field', 'grid-content')}
-        id="imgPath"
-        placeholder="Введите адреса через запятую"
-      />
-
-      <label htmlFor="login">Описание</label>
-      <textarea
-        {...register('details', {
-          value: !isAddProcedure ? defaultFieldValue : undefined,
-          required: true,
-        })}
-        className={clsx(errors.details && 'error-field', 'grid-content')}
-        id="describe"
-        placeholder="Введите описание"
-      />
-
-      <label htmlFor="login">Цена</label>
-      <input
-        {...register('price', {
-          value: !isAddProcedure ? 10000 : undefined,
-          required: true,
-        })}
-        className={clsx(errors.price && 'error-field', 'grid-content')}
-        type="number"
-        id="price"
-        placeholder="Введите цену"
-      />
-
-      <Button className="small margin-top-8" type="submit">
-        {isAddProcedure ? 'Добавить' : 'Сохранить'}
-      </Button>
-      {!isAddProcedure && (
-        <Button className="small margin-top-8" onClick={() => deleteHandler(watch('id'))}>
-          Удалить
+        <Button type="submit" size="small" sx={{ mt: 2 }}>
+          {isAddProcedure ? t('productForm.add') : t('productForm.save')}
         </Button>
-      )}
-    </form>
+        {!isAddProcedure && (
+          <Button
+            size="small"
+            sx={{ mt: 2 }}
+            onClick={() => deleteHandler(watch('id'))}
+          >
+            {t('productForm.delete')}
+          </Button>
+        )}
+      </Stack>
+    </Paper>
   );
 };

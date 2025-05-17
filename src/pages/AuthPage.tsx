@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Typography, Paper, Stack } from '@mui/material';
+import { Box, Typography, Paper } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { LangAndHomeControls } from '../components';
 import { AuthForm } from '../features/forms';
