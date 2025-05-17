@@ -49,7 +49,7 @@ export const Modal: React.FC<IModal> = ({ onClose, isOpen, children, title }) =>
           backgroundColor:
             theme.palette.mode === "dark"
               ? "rgba(25, 25, 25, 0.8)"
-              : "rgba(255, 255, 255, 0.85)",
+              : "rgba(255, 255, 255, 1)",
         },
       }}
     >
@@ -59,7 +59,7 @@ export const Modal: React.FC<IModal> = ({ onClose, isOpen, children, title }) =>
           <CloseIcon />
         </IconButton>
       </Box>
-      <DialogContent dividers>{children}</DialogContent>
+      <DialogContent >{children}</DialogContent>
     </Dialog>,
     document.body
   );

@@ -42,11 +42,11 @@ export const FullCard: React.FC<IFullCard> = ({ id, title, price, details, image
         justifyContent: 'space-between',
       }}
     >
-      <Box sx={{ flexShrink: 0, width: { xs: '100%', sm: 300 }, minHeight: { xs: 'auto', sm: 460 }  }}>
+      <Box sx={{ flexShrink: 0, width: { xs: '100%', sm: 600 }, minHeight: { xs: 'auto', sm: 600 }  }}>
         <img src={image} alt={title} width="100%" style={{ borderRadius: 8, objectFit: 'cover' }} />
       </Box>
 
-      <Box sx={{ flexGrow: 1, maxWidth: '600px' }}>
+      <Box sx={{ flexGrow: 1}}>
         <Typography variant="h5" fontWeight={600} gutterBottom>
           {title}
         </Typography>

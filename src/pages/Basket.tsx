@@ -16,6 +16,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useDispatch } from 'react-redux';
 import { useMutation } from '@apollo/client';
 import { ADD_ORDER } from '../graphql/mutations/products';
+import { backendErrorMessages } from '../shared/constants';
 
 export const Basket: React.FC = () => {
   const navigate = useNavigate();
@@ -47,6 +48,16 @@ export const Basket: React.FC = () => {
   };
 
   const emptyBasket = cartItems.length === 0;
+
+  // Функция для локализации ошибок
+  const getErrorMessage = (error: any) => {
+    if (error?.graphQLErrors) {
+      for (const e of error.graphQLErrors) {
+        if (e.extensions?.code === 'AUTH') return backendErrorMessages.AUTH;
+      }
+    }
+    return error?.message || t('basket.unknownError');
+  };
 
   return (
     <Layout title={t('basket.title')}>
@@ -91,8 +102,13 @@ export const Basket: React.FC = () => {
         </Stack>
 
         {error && (
-          <Paper elevation={1} sx={{ p: 2, backgroundColor: 'error.light', color: 'error.contrastText' }}>
-            <Typography>{t('basket.orderError')}: {error.message}</Typography>
+          <Paper
+            elevation={1}
+            sx={{ p: 2, backgroundColor: 'error.light', color: 'error.contrastText' }}
+          >
+            <Typography>
+              {t('basket.orderError')}: {getErrorMessage(error)}
+            </Typography>
           </Paper>
         )}
 

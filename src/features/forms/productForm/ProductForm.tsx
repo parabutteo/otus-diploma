@@ -1,102 +1,257 @@
-import * as React from 'react';
-import {
-  Button,
-  MenuItem,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useMutation } from '@apollo/client';
+import clsx from 'clsx';
+import { CATEGORY } from '../../../shared/constants';
+import { ADD_PRODUCT, PUT_PRODUCT, REMOVE_PRODUCT } from '../../../graphql/mutations/products';
+import { Button, MenuItem, Stack, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useAppDispatch } from '../../../store/hooks';
-import { addProduct, editProduct } from '../../products/productsSlice';
 
-interface ProductFormProps {
-  /** Признак добавления нового товара */
-  isAddProcedure: boolean;
-  /** Значения по умолчанию */
-  defaultFieldValue?: {
-    /** ID товара */
+type TProcedure = 'add' | 'edit';
+
+type TAuthFormData = {
+  id: string;
+  name: string;
+  category: string;
+  photo: string;
+  price: number;
+  details: string;
+};
+
+interface IProductForm {
+  /** Вид формы */
+  procedureType: TProcedure;
+  productData?: {
     id: string;
-    /** Название */
-    title: string;
-    /** Описание */
-    details: string;
-    /** Цена */
+    name: string;
+    categoryId: string;
+    photo: string;
     price: number;
-    /** Ссылка на изображение */
-    image: string;
-    /** Категория */
-    category: string;
+    desc: string;
   };
-  /** Обработчик удаления по ID */
-  deleteHandler: (id: string) => void;
 }
 
-export const ProductForm: React.FC<ProductFormProps> = ({
-  isAddProcedure,
-  defaultFieldValue,
-  deleteHandler,
-}) => {
-  const { register, handleSubmit, reset, watch } = useForm({
-    defaultValues: defaultFieldValue || {
-      title: '',
-      details: '',
-      price: 0,
-      image: '',
+/**
+ * Компонент добавления/редактирования продукта
+ *
+ * Тип формы прокидывается пропсом
+ *
+ * @param procedureType тип процедуры
+ *
+ * @returns React.FC
+ */
+
+export const ProductForm: React.FC<IProductForm> = ({ procedureType, productData }) => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm<TAuthFormData>({
+    defaultValues: {
+      id: '',
+      name: '',
       category: '',
+      photo: '',
+      price: 0,
+      details: '',
     },
   });
 
-  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSubmit = (data: any) => {
-    console.log('submit', data);
-    if (isAddProcedure) {
-      dispatch(addProduct(data));
+  // Признак формы с типом "добавление товара"
+  const isAddProcedure = procedureType === 'add';
+
+  const [addProduct, { loading: addLoading, error: addError }] = useMutation(ADD_PRODUCT);
+  const [putProduct, { loading: putLoading, error: putError }] = useMutation(PUT_PRODUCT);
+  const [deleteProduct, { loading: deleteLoading, error: deleteError }] = useMutation(REMOVE_PRODUCT);
+
+  React.useEffect(() => {
+    if (!isAddProcedure && productData) {
+      reset({
+        id: productData.id,
+        name: productData.name,
+        category: productData.categoryId,
+        photo: productData.photo,
+        price: productData.price,
+        details: productData.desc,
+      });
     } else {
-      dispatch(editProduct(data));
+      reset({
+        id: '',
+        name: '',
+        category: '',
+        photo: '',
+        price: 0,
+        details: '',
+      });
     }
-    reset();
+  }, [isAddProcedure, productData, reset]);
+
+  const mapFormDataToMutationInput = (data: TAuthFormData) => ({
+    name: data.name,
+    price: Number(data.price),
+    desc: data.details,
+    photo: data.photo,
+    categoryId: data.category,
+  });
+
+  const onSubmit = async (data: TAuthFormData) => {
+    try {
+      if (isAddProcedure) {
+        await addProduct({
+          variables: {
+            input: mapFormDataToMutationInput(data),
+          },
+        });
+        alert('Товар успешно добавлен!');
+      } else {
+        await putProduct({
+          variables: {
+            putId: data.id,
+            input: mapFormDataToMutationInput(data),
+          },
+        });
+        alert('Товар успешно обновлен!');
+      }
+      reset();
+    } catch (e) {
+      console.error('Ошибка при сохранении товара:', e);
+    }
   };
 
+  const deleteHandler = async () => {
+    const id = watch('id');
+    if (!id) {
+      alert('ID товара не указан');
+      return;
+    }
+    if (window.confirm('Вы уверены, что хотите удалить этот товар?')) {
+      try {
+        await deleteProduct({
+          variables: { removeId: id },
+        });
+        alert(`Товар с ID ${id} успешно удалён`);
+        reset();
+      } catch (e) {
+        console.error('Ошибка при удалении товара:', e);
+        alert('Ошибка при удалении товара');
+      }
+    }
+  };
+
+  const loading = isAddProcedure ? addLoading : putLoading || deleteLoading;
+  const error = isAddProcedure ? addError : putError || deleteError;
+
   return (
-    <Paper
-      component="form"
-      onSubmit={handleSubmit(onSubmit)}
-      sx={{ p: 4, borderRadius: 3, maxWidth: 500, mx: 'auto' }}
-    >
-      <Typography variant="h6" fontWeight="bold" gutterBottom>
-        {isAddProcedure ? t('productForm.addTitle') : t('productForm.editTitle')}
-      </Typography>
-
+    <form className="margin-top-24 form" onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
-        <TextField label={t('productForm.title')} fullWidth {...register('title')} />
-        <TextField label={t('productForm.details')} fullWidth {...register('details')} />
-        <TextField label={t('productForm.price')} type="number" fullWidth {...register('price')} />
-        <TextField label={t('productForm.image')} fullWidth {...register('image')} />
-        <TextField label={t('productForm.category')} select fullWidth {...register('category')}>
-          <MenuItem value="clothes">{t('productForm.categories.clothes')}</MenuItem>
-          <MenuItem value="electronics">{t('productForm.categories.electronics')}</MenuItem>
-          <MenuItem value="other">{t('productForm.categories.other')}</MenuItem>
-        </TextField>
-
-        <Button type="submit" size="small" sx={{ mt: 2 }}>
-          {isAddProcedure ? t('productForm.add') : t('productForm.save')}
-        </Button>
         {!isAddProcedure && (
-          <Button
-            size="small"
-            sx={{ mt: 2 }}
-            onClick={() => deleteHandler(watch('id'))}
-          >
-            {t('productForm.delete')}
-          </Button>
+          <>
+            <TextField
+              fullWidth
+              label="ID"
+              {...register('id', { required: true })}
+              className={clsx(errors.id && 'error-field', 'grid-content')}
+              type="text"
+              id="id"
+              placeholder="Введите идентификатор"
+            />
+          </>
         )}
+
+        <div className="grid-content">
+          <TextField
+            label={t('productForm.title')}
+            {...register('name', { required: 'Введите название товара' })}
+            className={clsx(errors.name && 'error-field', 'grid-content')}
+            type="text"
+            id="name"
+            placeholder="Введите название"
+            fullWidth
+          />
+          {errors.name && <p className="error">{errors.name.message}</p>}
+        </div>
+
+        <div className="grid-content">
+          <TextField
+            select
+            fullWidth
+            label={t('productForm.category')}
+            {...register('category', { required: 'Выберите категорию' })}
+            className={clsx(errors.category && 'error-field', 'grid-content')}
+            id="category"
+          >
+            <MenuItem value={CATEGORY.tshirt}>Футболки, рубашки</MenuItem>
+            <MenuItem value={CATEGORY.outware}>Верхняя одежда</MenuItem>
+            <MenuItem value={CATEGORY.shoes}>Обувь</MenuItem>
+          </TextField>
+          {errors.category && <p className="error">{errors.category.message}</p>}
+        </div>
+
+        <div className="grid-content">
+          <TextField
+            fullWidth
+            label={t('productForm.image')}
+            {...register('photo', { required: 'Введите путь к изображению' })}
+            className={clsx(errors.photo && 'error-field', 'grid-content')}
+            id="photo"
+            placeholder="Введите адрес изображения"
+          />
+          {errors.photo && <p className="error">{errors.photo.message}</p>}
+        </div>
+
+        <div className="grid-content">
+          <TextField
+            fullWidth
+            label={t('productForm.details')}
+            {...register('details', { required: 'Введите описание товара' })}
+            className={clsx(errors.details && 'error-field', 'grid-content')}
+            id="details"
+            placeholder="Введите описание"
+          />
+          {errors.details && <p className="error">{errors.details.message}</p>}
+        </div>
+
+        <div className="grid-content">
+          <TextField
+            fullWidth
+            label={t('productForm.price')}
+            {...register('price', {
+              required: 'Введите цену',
+              valueAsNumber: true,
+              min: { value: 0, message: 'Цена должна быть больше или равна 0' },
+            })}
+            className={clsx(errors.price && 'error-field', 'grid-content')}
+            type="number"
+            id="price"
+            placeholder="Введите цену"
+          />
+          {errors.price && <p className="error">{errors.price.message}</p>}
+        </div>
       </Stack>
-    </Paper>
+
+      <Button variant="outlined" size="small" sx={{ mt: 2 }} type="submit" disabled={loading}>
+        {isAddProcedure ? t('productForm.add') : t('productForm.edit')}
+      </Button>
+
+      {!isAddProcedure && (
+        <Button
+          variant="outlined"
+          color="error"
+          size="small"
+          sx={{ ml: 2, mt: 2 }}
+          type="button"
+          onClick={deleteHandler}
+          disabled={loading}
+        >
+          {t('productForm.delete')}
+        </Button>
+      )}
+
+      {error && <p className="error">Ошибка: {error.message}</p>}
+    </form>
   );
 };

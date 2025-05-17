@@ -5,4 +5,6 @@ export { Basket } from './Basket';
 export { NotFound } from './NotFound';
 export { Admin } from './Admin';
 export { Profile } from './Profile';
+export { Orders } from './Orders';
 export { Card } from './Card';
+export { AccessDenied } from './AccessDenied';
