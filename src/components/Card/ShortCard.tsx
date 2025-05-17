@@ -40,7 +40,7 @@ export const ShortCard: React.FC<IShortCard> = ({ item }) => {
   const cartItems = useAppSelector((state) => state.cart.items);
   const totalQuantity = cartItems.reduce(
     (acc, i) => (i.id === item.id ? acc + i.quantity : acc),
-    0
+    0,
   );
 
   const addItemToCartHandler = () => {
@@ -48,42 +48,60 @@ export const ShortCard: React.FC<IShortCard> = ({ item }) => {
   };
 
   return (
-    <Card sx={{ maxWidth: 345, display: "flex", flexDirection: "column" }}>
-      <CardMedia component="img" height="450" image={image} alt={title} />
+    <Card
+      sx={{
+        width: 300,
+        height: 625,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        mx: 'auto',
+      }}
+    >
+      <CardMedia
+        component="img"
+        image={image}
+        alt={title}
+        height={450}
+        sx={{
+          width: '100%',
+          objectFit: 'cover',
+        }}
+      />
 
-      <CardActions sx={{ px: 2, pt: 2, justifyContent: "center" }}>
+      <CardActions sx={{ px: 2, pt: 2, justifyContent: 'center' }}>
         {totalQuantity > 0 ? (
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              border: "1px solid",
-              borderColor: "divider",
+              display: 'flex',
+              alignItems: 'center',
+              border: '1px solid',
+              borderColor: 'divider',
               borderRadius: 2,
-              overflow: "hidden",
+              overflow: 'hidden',
             }}
           >
             <Button
               onClick={() => dispatch(removeItemFromCart(item.id))}
-              sx={{ minWidth: 40, borderRadius: 0, color: "error.main" }}
+              sx={{ minWidth: 40, borderRadius: 0, color: 'error.main' }}
             >
               –
             </Button>
             <Box
               sx={{
                 width: 48,
-                textAlign: "center",
+                textAlign: 'center',
                 px: 1,
                 py: 0.5,
                 fontWeight: 500,
-                fontSize: "1rem",
+                fontSize: '1rem',
               }}
             >
               {totalQuantity}
             </Box>
             <Button
               onClick={() => dispatch(addItemToCart({ id: item.id }))}
-              sx={{ minWidth: 40, borderRadius: 0, color: "primary.main" }}
+              sx={{ minWidth: 40, borderRadius: 0, color: 'primary.main' }}
             >
               +
             </Button>
@@ -95,11 +113,10 @@ export const ShortCard: React.FC<IShortCard> = ({ item }) => {
             endIcon={<ShoppingCartIcon />}
             onClick={addItemToCartHandler}
           >
-            {t("card.addToBasket")}
+            {t('card.addToBasket')}
           </Button>
         )}
       </CardActions>
-
 
       <CardContent sx={{ pt: 1 }}>
         <Typography variant="subtitle1" fontWeight={600}>
