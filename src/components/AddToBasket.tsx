@@ -1,9 +1,9 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button, Box, IconButton, InputBase } from '@mui/material';
+import { Button, Box, IconButton } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
+import { useTranslation } from 'react-i18next';
 
 interface IAddToBasket {
   /** Счетчик позиций */
@@ -41,30 +41,37 @@ export const AddToBasket: React.FC<IAddToBasket> = ({
         sx={{
           display: 'flex',
           alignItems: 'center',
-          border: '1px solid',
+          border: 1,
           borderColor: 'divider',
           borderRadius: 2,
           overflow: 'hidden',
-          opacity: isDisabled ? 0.5 : 1,
+          width: '100%',
         }}
       >
-        <IconButton onClick={decreaseClick} disabled={isDisabled}>
-          <RemoveIcon />
+        <IconButton
+          onClick={decreaseClick}
+          disabled={isDisabled}
+          sx={{ borderRadius: 0, width: 40, height: 40 }}
+        >
+          <RemoveIcon fontSize="small" />
         </IconButton>
-        <InputBase
-          value={counter}
-          readOnly
-          inputProps={{
-            style: {
-              textAlign: 'center',
-              width: '2.5rem',
-              fontWeight: 500,
-              fontSize: '1rem',
-            },
+        <Box
+          sx={{
+            flexGrow: 1,
+            textAlign: 'center',
+            fontWeight: 500,
+            fontSize: '1rem',
+            px: 1,
           }}
-        />
-        <IconButton onClick={increaseClick} disabled={isDisabled}>
-          <AddIcon />
+        >
+          {counter}
+        </Box>
+        <IconButton
+          onClick={increaseClick}
+          disabled={isDisabled}
+          sx={{ borderRadius: 0, width: 40, height: 40 }}
+        >
+          <AddIcon fontSize="small" />
         </IconButton>
       </Box>
     );
@@ -76,6 +83,7 @@ export const AddToBasket: React.FC<IAddToBasket> = ({
       onClick={increaseClick}
       startIcon={<ShoppingCartIcon />}
       variant="contained"
+      fullWidth
     >
       {t('card.addToBasket')}
     </Button>
