@@ -1,6 +1,9 @@
 import React from 'react';
-import clsx from 'clsx';
-import { Button } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { Button, Box, IconButton, InputBase } from '@mui/material';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
 
 interface IAddToBasket {
   /** Счетчик позиций */
@@ -24,22 +27,57 @@ interface IAddToBasket {
  *
  * Компонент подходит под паттерн "High order component"
  */
+export const AddToBasket: React.FC<IAddToBasket> = ({
+  counter,
+  isDisabled,
+  increaseClick,
+  decreaseClick,
+}) => {
+  const { t } = useTranslation();
 
-export const AddToBasket: React.FC<IAddToBasket> = ({ counter, isDisabled, increaseClick, decreaseClick }) => {
   if (counter > 0) {
     return (
-      <div className={clsx('counter', 'flex-row', 'align-items-center', isDisabled && 'disabled')}>
-        <Button onClick={decreaseClick}>-</Button>
-        <input type="number" value={counter} onChange={() => null} readOnly />
-        <Button onClick={increaseClick}>+</Button>
-      </div>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 2,
+          overflow: 'hidden',
+          opacity: isDisabled ? 0.5 : 1,
+        }}
+      >
+        <IconButton onClick={decreaseClick} disabled={isDisabled}>
+          <RemoveIcon />
+        </IconButton>
+        <InputBase
+          value={counter}
+          readOnly
+          inputProps={{
+            style: {
+              textAlign: 'center',
+              width: '2.5rem',
+              fontWeight: 500,
+              fontSize: '1rem',
+            },
+          }}
+        />
+        <IconButton onClick={increaseClick} disabled={isDisabled}>
+          <AddIcon />
+        </IconButton>
+      </Box>
     );
   }
 
   return (
-    <Button disabled={isDisabled} onClick={increaseClick}>
-      Добавить в корзину
-      <i className="margin-left-12 fa fa-shopping-cart" />
+    <Button
+      disabled={isDisabled}
+      onClick={increaseClick}
+      startIcon={<ShoppingCartIcon />}
+      variant="contained"
+    >
+      {t('card.addToBasket')}
     </Button>
   );
 };
