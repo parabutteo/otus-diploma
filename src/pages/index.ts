@@ -5,3 +5,4 @@ export { Basket } from './Basket';
 export { NotFound } from './NotFound';
 export { Admin } from './Admin';
 export { Profile } from './Profile';
+export { Card } from './Card';
