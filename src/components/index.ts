@@ -8,3 +8,4 @@ export { BasketItem } from './Card/BasketItem';
 export { ShortCard } from './Card/ShortCard';
 export { FullCard } from './Card/FullCard';
 export { Footer } from './Footer';
+export { ScrollTopFab } from './ScrollTopFab';
