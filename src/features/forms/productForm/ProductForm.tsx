@@ -3,15 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
 import { CATEGORY } from '../../../shared/constants';
 import { ADD_PRODUCT, PUT_PRODUCT, REMOVE_PRODUCT } from '../../../graphql/mutations/products';
-import {
-  Box,
-  Button,
-  MenuItem,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, MenuItem, Paper, Stack, TextField, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 // тип процедуры: добавление или редактирование
@@ -29,14 +21,6 @@ type TAuthFormData = {
 interface IProductForm {
   /** Вид формы */
   procedureType: TProcedure;
-  productData?: {
-    id: string;
-    name: string;
-    categoryId: string;
-    photo: string;
-    price: number;
-    desc: string;
-  };
 }
 
 /**
@@ -48,7 +32,7 @@ interface IProductForm {
  *
  * @returns React.FC
  */
-export const ProductForm: React.FC<IProductForm> = ({ procedureType, productData }) => {
+export const ProductForm: React.FC<IProductForm> = ({ procedureType }) => {
   const {
     register,
     handleSubmit,
@@ -74,28 +58,6 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType, productData
   const [addProduct, { loading: addLoading, error: addError }] = useMutation(ADD_PRODUCT);
   const [putProduct, { loading: putLoading, error: putError }] = useMutation(PUT_PRODUCT);
   const [deleteProduct, { loading: deleteLoading, error: deleteError }] = useMutation(REMOVE_PRODUCT);
-
-  React.useEffect(() => {
-    if (!isAddProcedure && productData) {
-      reset({
-        id: productData.id,
-        name: productData.name,
-        category: productData.categoryId,
-        photo: productData.photo,
-        price: productData.price,
-        details: productData.desc,
-      });
-    } else {
-      reset({
-        id: '',
-        name: '',
-        category: '',
-        photo: '',
-        price: 0,
-        details: '',
-      });
-    }
-  }, [isAddProcedure, productData, reset]);
 
   const mapFormDataToMutationInput = (data: TAuthFormData) => ({
     name: data.name,
@@ -149,22 +111,24 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType, productData
             fullWidth
             label="ID"
             {...register('id', { required: true })}
-            
             type="text"
             id="id"
             placeholder="Введите идентификатор"
-           error={!!errors.id} helperText={errors.id?.message} />
+            error={!!errors.id}
+            helperText={errors.id?.message}
+          />
         )}
 
         <TextField
           label={t('productForm.title')}
           {...register('name', { required: 'Введите название товара' })}
-          
           type="text"
           id="name"
           placeholder="Введите название"
           fullWidth
-         error={!!errors.name} helperText={errors.name?.message} />
+          error={!!errors.name}
+          helperText={errors.name?.message}
+        />
         {errors.name && <Typography color="error">{errors.name.message}</Typography>}
 
         <TextField
@@ -172,7 +136,6 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType, productData
           fullWidth
           label={t('productForm.category')}
           {...register('category', { required: 'Выберите категорию' })}
-          
           id="category"
         >
           <MenuItem value={CATEGORY.tshirt}>Футболки, рубашки</MenuItem>
@@ -185,20 +148,22 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType, productData
           fullWidth
           label={t('productForm.image')}
           {...register('photo', { required: 'Введите путь к изображению' })}
-          
           id="photo"
           placeholder="Введите адрес изображения"
-         error={!!errors.photo} helperText={errors.photo?.message} />
+          error={!!errors.photo}
+          helperText={errors.photo?.message}
+        />
         {errors.photo && <Typography color="error">{errors.photo.message}</Typography>}
 
         <TextField
           fullWidth
           label={t('productForm.details')}
           {...register('details', { required: 'Введите описание товара' })}
-          
           id="details"
           placeholder="Введите описание"
-         error={!!errors.details} helperText={errors.details?.message} />
+          error={!!errors.details}
+          helperText={errors.details?.message}
+        />
         {errors.details && <Typography color="error">{errors.details.message}</Typography>}
 
         <TextField
@@ -209,11 +174,12 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType, productData
             valueAsNumber: true,
             min: { value: 0, message: 'Цена должна быть больше или равна 0' },
           })}
-          
           type="number"
           id="price"
           placeholder="Введите цену"
-         error={!!errors.price} helperText={errors.price?.message} />
+          error={!!errors.price}
+          helperText={errors.price?.message}
+        />
         {errors.price && <Typography color="error">{errors.price.message}</Typography>}
 
         <Box display="flex" gap={2} flexWrap="wrap">

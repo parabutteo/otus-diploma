@@ -69,7 +69,6 @@ export const ADD_CATEGORY = gql`
       add(input: $input) {
         id
         name
-        commandId
       }
     }
   }
@@ -79,7 +78,6 @@ export const REMOVE_CATEGORY = gql`
   mutation RemoveCategory($removeId: ID!) {
     categories {
       remove(id: $removeId) {
-        commandId
         id
         name
       }

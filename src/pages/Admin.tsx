@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { Layout } from '../components';
-import { Button, Stack, Typography } from '@mui/material';
+import { Layout, Loader } from '../components';
+import { Box, Button, Stack, Table, TableBody, TableCell, TableRow, Typography } from '@mui/material';
 import { ModalItem } from '../entities/ModalItem';
 import { useTranslation } from 'react-i18next';
+import { useMutation, useQuery } from '@apollo/client';
+import { GET_CATEGORIES } from '../graphql/queries/products';
+import { CategoryModal } from '../entities/CategoryModal';
+import { REMOVE_CATEGORY } from '../graphql/mutations/products';
 
 export const Admin: React.FC = () => {
   const { t } = useTranslation();
@@ -22,6 +26,36 @@ export const Admin: React.FC = () => {
 
   const navigate = useNavigate();
 
+  // Запрос списка категорий
+  const { data, loading, error, refetch } = useQuery(GET_CATEGORIES);
+  const categoryList = data?.categories?.getMany?.data || [];
+
+  const [isOpenCatModal, setIsOpenCatModal] = React.useState<boolean>(false);
+
+  // Мутация удаления категории с refetchQueries для обновления списка
+  const [removeCategory, { loading: removeLoading, error: removeError }] = useMutation(REMOVE_CATEGORY, {
+    refetchQueries: [{ query: GET_CATEGORIES }],
+    awaitRefetchQueries: true, // Ждём завершения refetchQueries перед продолжением
+  });
+
+  const removeCatHandler = async (id: string) => {
+    if (!window.confirm('Вы уверены, что хотите удалить эту категорию?')) {
+      return;
+    }
+    try {
+      await removeCategory({ variables: { removeId: id } });
+      alert('Категория успешно удалена.');
+    } catch (e) {
+      console.error('Ошибка при удалении категории:', e);
+      alert('Ошибка при удалении категории.');
+    }
+  };
+
+  // Функция для обновления списка категорий (передаётся в CategoryModal)
+  const handleCategoryAdded = () => {
+    refetch();
+  };
+
   return (
     <Layout title={t('admin.title')}>
       <Typography variant="h5" sx={{ mb: 2 }}>
@@ -35,7 +69,48 @@ export const Admin: React.FC = () => {
           {t('admin.edit')}
         </Button>
       </Stack>
-      <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
+
+      <Typography variant="h5" sx={{ mt: 8 }}>
+        Действия с категориями:
+      </Typography>
+      {loading && <Loader />}
+      {error && <Typography color="error">Ошибка загрузки категорий: {error.message}</Typography>}
+      {!loading && !error && (
+        <>
+          {categoryList.length === 0 ? (
+            <Typography>Категории не найдены</Typography>
+          ) : (
+            <>
+              <Table>
+                <TableBody>
+                  {categoryList.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <Box display="flex" justifyContent="space-between" alignItems="center">
+                          <Typography>{item.name}</Typography>
+                          <Button
+                            color="error"
+                            variant="outlined"
+                            onClick={() => removeCatHandler(item.id)}
+                            disabled={removeLoading}
+                          >
+                            Удалить
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <Button variant="outlined" sx={{ mt: 2 }} onClick={() => setIsOpenCatModal(true)}>
+                Добавить новую категорию
+              </Button>
+            </>
+          )}
+        </>
+      )}
+
+      <Typography variant="h5" sx={{ mt: 8, mb: 2 }}>
         Заказы пользователей:
       </Typography>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mb={3}>
@@ -45,6 +120,13 @@ export const Admin: React.FC = () => {
       </Stack>
 
       <ModalItem modalType={modalType} isOpen={isOpenModal} onClose={() => setIsOpenModal(false)} />
+
+      {/* Передаём в CategoryModal функцию обновления списка */}
+      <CategoryModal
+        isOpen={isOpenCatModal}
+        onClose={() => setIsOpenCatModal(false)}
+        onCategoryAdded={handleCategoryAdded}
+      />
 
       <Outlet />
     </Layout>
