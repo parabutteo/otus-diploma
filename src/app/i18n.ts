@@ -93,6 +93,18 @@ const resources = {
         cancel: 'Cancel',
         submit: 'Save',
       },
+      orders: {
+        emptyTitle: "You have no orders yet",
+        emptyMessage: "Place an order and it will appear here.",
+        toCatalog: "Go to catalog",
+        title: "My Orders",
+        cancel: "Cancel Order",
+        itemCount: "Items in order",
+        error: "Error while loading orders",
+        pcs: "pcs",
+        confirmCancel: "Are you sure you want to cancel this order?",
+        cancelError: "Error while canceling the order:",
+      }
     },
   },
   ru: {
@@ -186,6 +198,18 @@ const resources = {
         cancel: 'Отмена',
         submit: 'Сохранить',
       },
+      orders: {
+        emptyTitle: "У вас пока нет заказов",
+        emptyMessage: "Сделайте заказ, и он появится здесь.",
+        toCatalog: "К каталогу",
+        title: "Мои заказы",
+        cancel: "Отказаться от заказа",
+        itemCount: "Позиции в заказе",
+        error: "Ошибка при загрузке заказов",
+        pcs: "шт.",
+        confirmCancel: "Вы уверены, что хотите отказаться от этого заказа?",
+        cancelError: "Ошибка при удалении заказа:",
+      }
     },
   },
 };
