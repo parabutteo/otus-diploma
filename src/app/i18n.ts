@@ -103,6 +103,7 @@ const resources = {
         error: "Error while loading orders",
         pcs: "pcs",
         confirmCancel: "Are you sure you want to cancel this order?",
+        confirmRemove: "Are you sure you want to remove this order?",
         cancelError: "Error while canceling the order:",
       }
     },
@@ -208,6 +209,7 @@ const resources = {
         error: "Ошибка при загрузке заказов",
         pcs: "шт.",
         confirmCancel: "Вы уверены, что хотите отказаться от этого заказа?",
+        confirmRemove: "Вы уверены, что хотите удалить этот заказ?",
         cancelError: "Ошибка при удалении заказа:",
       }
     },

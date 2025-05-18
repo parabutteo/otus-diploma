@@ -106,3 +106,14 @@ export const REMOVE_ORDER = gql`
     }
   }
 `;
+
+export const UPDATE_ORDER = gql`
+  mutation CancelOrder($patchId: ID!, $input: OrderUpdateInput!) {
+    orders {
+      patch(id: $patchId, input: $input) {
+        id
+        status
+      }
+    }
+  }
+`;
