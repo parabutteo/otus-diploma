@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { Layout } from '../components';
-import { Button, Stack } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import { ModalItem } from '../entities/ModalItem';
 import { useTranslation } from 'react-i18next';
 
@@ -20,14 +20,27 @@ export const Admin: React.FC = () => {
     setModalType('edit');
   };
 
+  const navigate = useNavigate();
+
   return (
     <Layout title={t('admin.title')}>
+      <Typography variant="h5" sx={{ mb: 2 }}>
+        Действия с товарами:
+      </Typography>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mb={3}>
         <Button variant="contained" color="primary" onClick={openAddModal}>
           {t('admin.add')}
         </Button>
         <Button variant="outlined" color="primary" onClick={openEditModal}>
           {t('admin.edit')}
+        </Button>
+      </Stack>
+      <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
+        Заказы пользователей:
+      </Typography>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mb={3}>
+        <Button variant="contained" color="primary" onClick={() => navigate('/admin/orders')}>
+          Все заказы
         </Button>
       </Stack>
 

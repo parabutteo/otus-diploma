@@ -1,6 +1,18 @@
 import React from 'react';
 import { Route, Routes } from 'react-router';
-import { AccessDenied, Admin, AuthPage, Basket, Card, Catalog, NotFound, Orders, Profile, RegisterPage } from '../../pages';
+import {
+  AccessDenied,
+  Admin,
+  AdminOrders,
+  AuthPage,
+  Basket,
+  Card,
+  Catalog,
+  NotFound,
+  Orders,
+  Profile,
+  RegisterPage,
+} from '../../pages';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { initializeApp } from '../../features/app/appSlice';
 import { ADMIN_ID } from '../../shared/constants';
@@ -36,10 +48,13 @@ export const AppRoutes: React.FC = () => {
       <Route path="/profile/orders" element={userIsAuth ? <Orders /> : <AccessDenied />} />
       <Route path="*" element={<NotFound />} />
       {userIsAuth && isAdminRole && (
-        <Route path="/admin" element={<Admin />}>
-          <Route path="add-item" element={<ModalItem modalType="add" />} />
-          <Route path="edit-item" element={<ModalItem modalType="edit" />} />
-        </Route>
+        <>
+          <Route path="/admin" element={<Admin />}>
+            <Route path="add-item" element={<ModalItem modalType="add" />} />
+            <Route path="edit-item" element={<ModalItem modalType="edit" />} />
+          </Route>
+          <Route path="/admin/orders" element={<AdminOrders />} />
+        </>
       )}
     </Routes>
   );
