@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Header } from "./Header.tsx";
 import { Box, Container, Typography, useTheme } from "@mui/material";
+import { Footer } from "./Footer.tsx";
 
 interface Props {
   title: string;
@@ -29,5 +30,8 @@ export const Layout: React.FC<Props> = ({title, children}) => {
     <Box sx={{ py: 4 }}>
       <Container maxWidth="xl">{children}</Container>
     </Box>
+
+    {/* Подвал */}
+    <Footer />
   </>
 )};
