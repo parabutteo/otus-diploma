@@ -50,6 +50,7 @@ export const Basket: React.FC = () => {
   const emptyBasket = cartItems.length === 0;
 
   // Функция для локализации ошибок
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const getErrorMessage = (error: any) => {
     if (error?.graphQLErrors) {
       for (const e of error.graphQLErrors) {
