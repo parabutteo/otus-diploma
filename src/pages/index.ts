@@ -6,5 +6,6 @@ export { NotFound } from './NotFound';
 export { Admin } from './Admin';
 export { Profile } from './Profile';
 export { Orders } from './Orders';
+export { AdminOrders} from './AdminOrders';
 export { Card } from './Card';
 export { AccessDenied } from './AccessDenied';

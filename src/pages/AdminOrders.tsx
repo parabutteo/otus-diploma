@@ -7,19 +7,31 @@ import { Button, Box, Typography, List, ListItem } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { GET_PROFILE_ID } from '../graphql/queries/profile';
+import { GET_PROFILE } from '../graphql/queries/profile';
 
-export const Orders: React.FC = () => {
+export const AdminOrders: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const input = {};
 
-  // Запрос списка заказов
   const { data, loading, error, refetch } = useQuery(GET_ORDERS, {
     variables: { input },
   });
 
-  // Мутация удаления заказа
+  const { data: profileData, loading: profileLoading, error: profileError } = useQuery(GET_PROFILE);
+
+  const getEmailById = (id: string): string | null => {
+    if (profileLoading || profileError || !profileData) return null;
+
+    const profile = profileData.profile;
+
+    if (profile && profile.id === id) {
+      return profile.email ?? null;
+    }
+
+    return null;
+  };
+
   const [removeOrder, { loading: removing }] = useMutation(REMOVE_ORDER, {
     onCompleted: () => {
       refetch();
@@ -29,17 +41,8 @@ export const Orders: React.FC = () => {
     },
   });
 
-  // Запрос profileId текущего пользователя
-  const { data: pidData } = useQuery(GET_PROFILE_ID);
-  const profileId = pidData?.profile?.id || null;
+  const ordersList = data?.orders.getMany.data;
 
-  // Получаем список заказов
-  const ordersList = data?.orders.getMany.data || [];
-
-  // Фильтруем заказы по profileId (order.user.id)
-  const filteredOrders = profileId ? ordersList.filter((order: any) => order.user?.id === profileId) : [];
-
-  // Обработчик удаления заказа
   const handleRemoveOrder = (orderId: string) => {
     if (window.confirm(`${t('orders.confirmCancel')}`)) {
       removeOrder({
@@ -49,17 +52,17 @@ export const Orders: React.FC = () => {
   };
 
   return (
-    <Layout title="Мои заказы">
-      {(loading || removing) && <Loader />}
-      {error && (
+    <Layout title="Все заказы">
+      {(loading || removing || profileLoading) && <Loader />}
+      {(error || profileError) && (
         <Typography color="error">
-          {t('orders.error')}: {error?.message}
+          {t('orders.error')}: {error?.message || profileError?.message}
         </Typography>
       )}
-      {!loading && !error && (
+      {!loading && !error && !profileLoading && !profileError && (
         <>
-          {filteredOrders.length > 0 ? (
-            filteredOrders.map((order: any) => (
+          {ordersList && ordersList.length > 0 ? (
+            ordersList.map((order: any) => (
               <Box
                 key={order.id}
                 sx={{
@@ -75,6 +78,7 @@ export const Orders: React.FC = () => {
                   Заказ в статусе:
                   {order.status && ' ожидает подтверждения'}
                 </Typography>
+                <Typography sx={{ mt: 2 }}>Заказано пользователем: {getEmailById(order.user.id) ?? '-'}</Typography>
                 <Typography sx={{ mt: 1 }}>
                   {t('orders.itemsCount')}: {order.products.length}
                 </Typography>
@@ -89,13 +93,20 @@ export const Orders: React.FC = () => {
                   ))}
                 </List>
                 <Button
+                  variant="contained"
+                  size="small"
+                  sx={{ mt: 2, mr: 2 }}
+                >
+                  Подтвердить заказ
+                </Button>
+                <Button
                   variant="outlined"
                   size="small"
                   sx={{ mt: 2 }}
                   onClick={() => handleRemoveOrder(order.id)}
                   disabled={removing}
                 >
-                  {t('orders.cancel')}
+                  Удалить заказ
                 </Button>
               </Box>
             ))

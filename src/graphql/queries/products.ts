@@ -56,6 +56,7 @@ export const GET_ORDERS = gql`
       getMany(input: $input) {
         data {
           id
+          status
           products {
             _id
             product {
