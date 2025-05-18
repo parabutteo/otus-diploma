@@ -1,8 +1,7 @@
 import React from 'react';
 import { Layout, Loader } from '../components';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { GET_ORDERS } from '../graphql/queries/products';
-import { REMOVE_ORDER } from '../graphql/mutations/products';
 import { Button, Box, Typography, List, ListItem } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +13,7 @@ export const AdminOrders: React.FC = () => {
   const navigate = useNavigate();
   const input = {};
 
-  const { data, loading, error, refetch } = useQuery(GET_ORDERS, {
+  const { data, loading, error } = useQuery(GET_ORDERS, {
     variables: { input },
   });
 
@@ -32,28 +31,11 @@ export const AdminOrders: React.FC = () => {
     return null;
   };
 
-  const [removeOrder, { loading: removing }] = useMutation(REMOVE_ORDER, {
-    onCompleted: () => {
-      refetch();
-    },
-    onError: (error) => {
-      alert(`${t('orders.cancelError')} ${error.message}`);
-    },
-  });
-
   const ordersList = data?.orders.getMany.data;
-
-  const handleRemoveOrder = (orderId: string) => {
-    if (window.confirm(`${t('orders.confirmCancel')}`)) {
-      removeOrder({
-        variables: { removeId: orderId },
-      });
-    }
-  };
 
   return (
     <Layout title="Все заказы">
-      {(loading || removing || profileLoading) && <Loader />}
+      {(loading || profileLoading) && <Loader />}
       {(error || profileError) && (
         <Typography color="error">
           {t('orders.error')}: {error?.message || profileError?.message}
@@ -75,8 +57,10 @@ export const AdminOrders: React.FC = () => {
               >
                 <Typography variant="h6">ID: {order.id}</Typography>
                 <Typography variant="h6">
-                  Заказ в статусе:
-                  {order.status && ' ожидает подтверждения'}
+                  Заказ в статусе:&nbsp;
+                  {order.status === 'PendingConfirmation' && 'ожидает подтверждения'}
+                  {order.status === 'OrderCancelled' && 'отменён'}
+                  {order.status === 'Processing' && 'подтверждён'}
                 </Typography>
                 <Typography sx={{ mt: 2 }}>Заказано пользователем: {getEmailById(order.user.id) ?? '-'}</Typography>
                 <Typography sx={{ mt: 1 }}>
@@ -92,22 +76,6 @@ export const AdminOrders: React.FC = () => {
                     </ListItem>
                   ))}
                 </List>
-                <Button
-                  variant="contained"
-                  size="small"
-                  sx={{ mt: 2, mr: 2 }}
-                >
-                  Подтвердить заказ
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  sx={{ mt: 2 }}
-                  onClick={() => handleRemoveOrder(order.id)}
-                  disabled={removing}
-                >
-                  Удалить заказ
-                </Button>
               </Box>
             ))
           ) : (

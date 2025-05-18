@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Layout, Loader } from '../components';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_ORDERS } from '../graphql/queries/products';
-import { REMOVE_ORDER } from '../graphql/mutations/products';
+import { REMOVE_ORDER, UPDATE_ORDER } from '../graphql/mutations/products';
 import { Button, Box, Typography, List, ListItem } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -19,13 +19,18 @@ export const Orders: React.FC = () => {
     variables: { input },
   });
 
-  // Мутация удаления заказа
-  const [removeOrder, { loading: removing }] = useMutation(REMOVE_ORDER, {
+  // Принудительно обновляем список заказов при загрузке страницы
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  // Мутация отмены заказа
+  const [cancelOrder, { loading: canceling }] = useMutation(UPDATE_ORDER, {
     onCompleted: () => {
       refetch();
     },
     onError: (error) => {
-      alert(`${t('orders.cancelError')} ${error.message}`);
+      alert(`Отменить заказ не удалось. Ошибка ${error.message}`);
     },
   });
 
@@ -39,18 +44,57 @@ export const Orders: React.FC = () => {
   // Фильтруем заказы по profileId (order.user.id)
   const filteredOrders = profileId ? ordersList.filter((order: any) => order.user?.id === profileId) : [];
 
-  // Обработчик удаления заказа
-  const handleRemoveOrder = (orderId: string) => {
+  // Обработчик отмены заказа
+  const handleCancelOrder = (orderId: string) => {
     if (window.confirm(`${t('orders.confirmCancel')}`)) {
+      cancelOrder({
+        variables: {
+          patchId: orderId,
+          input: {
+            status: 'OrderCancelled',
+          },
+        },
+      });
+    }
+  };
+
+  // Мутация удаления заказа
+  const [removeOrder, { loading: removing }] = useMutation(REMOVE_ORDER, {
+    onCompleted: () => {
+      refetch();
+    },
+  });
+  const handleRemoveOrder = (orderId: string) => {
+    if (window.confirm(`${t('orders.confirmRemove')}`)) {
       removeOrder({
         variables: { removeId: orderId },
       });
     }
   };
 
+  // Мутация подтверждения заказа
+  const [confirmOrder, { loading: confirming }] = useMutation(UPDATE_ORDER, {
+    onCompleted: () => {
+      refetch();
+    },
+    onError: (error) => {
+      alert(`Отменить заказ не удалось. Ошибка ${error.message}`);
+    },
+  });
+  const handleConfirmOrder = (orderId: string) => {
+    confirmOrder({
+      variables: {
+        patchId: orderId,
+        input: {
+          status: 'Processing',
+        },
+      },
+    });
+  };
+
   return (
     <Layout title="Мои заказы">
-      {(loading || removing) && <Loader />}
+      {(loading || canceling || removing || confirming) && <Loader />}
       {error && (
         <Typography color="error">
           {t('orders.error')}: {error?.message}
@@ -72,8 +116,10 @@ export const Orders: React.FC = () => {
               >
                 <Typography variant="h6">ID: {order.id}</Typography>
                 <Typography variant="h6">
-                  Заказ в статусе:
-                  {order.status && ' ожидает подтверждения'}
+                  Заказ в статусе:&nbsp;
+                  {order.status === 'PendingConfirmation' && 'ожидает подтверждения'}
+                  {order.status === 'OrderCancelled' && 'отменён'}
+                  {order.status === 'Processing' && 'подтверждён'}
                 </Typography>
                 <Typography sx={{ mt: 1 }}>
                   {t('orders.itemsCount')}: {order.products.length}
@@ -88,15 +134,42 @@ export const Orders: React.FC = () => {
                     </ListItem>
                   ))}
                 </List>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  sx={{ mt: 2 }}
-                  onClick={() => handleRemoveOrder(order.id)}
-                  disabled={removing}
-                >
-                  {t('orders.cancel')}
-                </Button>
+                {order.status !== 'OrderCancelled' && (
+                  <>
+                    {order.status !== 'Processing' && (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        sx={{ mt: 2, mr: 2 }}
+                        onClick={() => handleConfirmOrder(order.id)}
+                        disabled={confirming}
+                      >
+                        Подтвердить заказ
+                      </Button>
+                    )}
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{ mt: 2, mr: 2 }}
+                      onClick={() => handleCancelOrder(order.id)}
+                      disabled={canceling}
+                    >
+                      {t('orders.cancel')}
+                    </Button>
+                  </>
+                )}
+                {order.status !== 'Processing' && (
+                  <Button
+                    variant="contained"
+                    color="error"
+                    size="small"
+                    sx={{ mt: 2 }}
+                    onClick={() => handleRemoveOrder(order.id)}
+                    disabled={removing}
+                  >
+                    Удалить заказ
+                  </Button>
+                )}
               </Box>
             ))
           ) : (
