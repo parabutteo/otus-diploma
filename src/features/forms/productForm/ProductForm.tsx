@@ -1,12 +1,20 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
-import clsx from 'clsx';
 import { CATEGORY } from '../../../shared/constants';
 import { ADD_PRODUCT, PUT_PRODUCT, REMOVE_PRODUCT } from '../../../graphql/mutations/products';
-import { Button, MenuItem, Stack, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  MenuItem,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
+// тип процедуры: добавление или редактирование
 type TProcedure = 'add' | 'edit';
 
 type TAuthFormData = {
@@ -40,7 +48,6 @@ interface IProductForm {
  *
  * @returns React.FC
  */
-
 export const ProductForm: React.FC<IProductForm> = ({ procedureType, productData }) => {
   const {
     register,
@@ -101,19 +108,10 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType, productData
   const onSubmit = async (data: TAuthFormData) => {
     try {
       if (isAddProcedure) {
-        await addProduct({
-          variables: {
-            input: mapFormDataToMutationInput(data),
-          },
-        });
+        await addProduct({ variables: { input: mapFormDataToMutationInput(data) } });
         alert('Товар успешно добавлен!');
       } else {
-        await putProduct({
-          variables: {
-            putId: data.id,
-            input: mapFormDataToMutationInput(data),
-          },
-        });
+        await putProduct({ variables: { putId: data.id, input: mapFormDataToMutationInput(data) } });
         alert('Товар успешно обновлен!');
       }
       reset();
@@ -130,9 +128,7 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType, productData
     }
     if (window.confirm('Вы уверены, что хотите удалить этот товар?')) {
       try {
-        await deleteProduct({
-          variables: { removeId: id },
-        });
+        await deleteProduct({ variables: { removeId: id } });
         alert(`Товар с ID ${id} успешно удалён`);
         reset();
       } catch (e) {
@@ -146,112 +142,101 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType, productData
   const error = isAddProcedure ? addError : putError || deleteError;
 
   return (
-    <form className="margin-top-24 form" onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={2}>
+    <Paper component="form" onSubmit={handleSubmit(onSubmit)} sx={{ p: 4, borderRadius: 3 }}>
+      <Stack spacing={3}>
         {!isAddProcedure && (
-          <>
-            <TextField
-              fullWidth
-              label="ID"
-              {...register('id', { required: true })}
-              className={clsx(errors.id && 'error-field', 'grid-content')}
-              type="text"
-              id="id"
-              placeholder="Введите идентификатор"
-            />
-          </>
+          <TextField
+            fullWidth
+            label="ID"
+            {...register('id', { required: true })}
+            
+            type="text"
+            id="id"
+            placeholder="Введите идентификатор"
+           error={!!errors.id} helperText={errors.id?.message} />
         )}
 
-        <div className="grid-content">
-          <TextField
-            label={t('productForm.title')}
-            {...register('name', { required: 'Введите название товара' })}
-            className={clsx(errors.name && 'error-field', 'grid-content')}
-            type="text"
-            id="name"
-            placeholder="Введите название"
-            fullWidth
-          />
-          {errors.name && <p className="error">{errors.name.message}</p>}
-        </div>
+        <TextField
+          label={t('productForm.title')}
+          {...register('name', { required: 'Введите название товара' })}
+          
+          type="text"
+          id="name"
+          placeholder="Введите название"
+          fullWidth
+         error={!!errors.name} helperText={errors.name?.message} />
+        {errors.name && <Typography color="error">{errors.name.message}</Typography>}
 
-        <div className="grid-content">
-          <TextField
-            select
-            fullWidth
-            label={t('productForm.category')}
-            {...register('category', { required: 'Выберите категорию' })}
-            className={clsx(errors.category && 'error-field', 'grid-content')}
-            id="category"
-          >
-            <MenuItem value={CATEGORY.tshirt}>Футболки, рубашки</MenuItem>
-            <MenuItem value={CATEGORY.outware}>Верхняя одежда</MenuItem>
-            <MenuItem value={CATEGORY.shoes}>Обувь</MenuItem>
-          </TextField>
-          {errors.category && <p className="error">{errors.category.message}</p>}
-        </div>
-
-        <div className="grid-content">
-          <TextField
-            fullWidth
-            label={t('productForm.image')}
-            {...register('photo', { required: 'Введите путь к изображению' })}
-            className={clsx(errors.photo && 'error-field', 'grid-content')}
-            id="photo"
-            placeholder="Введите адрес изображения"
-          />
-          {errors.photo && <p className="error">{errors.photo.message}</p>}
-        </div>
-
-        <div className="grid-content">
-          <TextField
-            fullWidth
-            label={t('productForm.details')}
-            {...register('details', { required: 'Введите описание товара' })}
-            className={clsx(errors.details && 'error-field', 'grid-content')}
-            id="details"
-            placeholder="Введите описание"
-          />
-          {errors.details && <p className="error">{errors.details.message}</p>}
-        </div>
-
-        <div className="grid-content">
-          <TextField
-            fullWidth
-            label={t('productForm.price')}
-            {...register('price', {
-              required: 'Введите цену',
-              valueAsNumber: true,
-              min: { value: 0, message: 'Цена должна быть больше или равна 0' },
-            })}
-            className={clsx(errors.price && 'error-field', 'grid-content')}
-            type="number"
-            id="price"
-            placeholder="Введите цену"
-          />
-          {errors.price && <p className="error">{errors.price.message}</p>}
-        </div>
-      </Stack>
-
-      <Button variant="outlined" size="small" sx={{ mt: 2 }} type="submit" disabled={loading}>
-        {isAddProcedure ? t('productForm.add') : t('productForm.edit')}
-      </Button>
-
-      {!isAddProcedure && (
-        <Button
-          variant="outlined"
-          color="error"
-          size="small"
-          sx={{ ml: 2, mt: 2 }}
-          type="button"
-          onClick={deleteHandler}
-          disabled={loading}
+        <TextField
+          select
+          fullWidth
+          label={t('productForm.category')}
+          {...register('category', { required: 'Выберите категорию' })}
+          
+          id="category"
         >
-          {t('productForm.delete')}
-        </Button>
-      )}
+          <MenuItem value={CATEGORY.tshirt}>Футболки, рубашки</MenuItem>
+          <MenuItem value={CATEGORY.outware}>Верхняя одежда</MenuItem>
+          <MenuItem value={CATEGORY.shoes}>Обувь</MenuItem>
+        </TextField>
+        {errors.category && <Typography color="error">{errors.category.message}</Typography>}
 
-      {error && <p className="error">Ошибка: {error.message}</p>}
-    </form>
+        <TextField
+          fullWidth
+          label={t('productForm.image')}
+          {...register('photo', { required: 'Введите путь к изображению' })}
+          
+          id="photo"
+          placeholder="Введите адрес изображения"
+         error={!!errors.photo} helperText={errors.photo?.message} />
+        {errors.photo && <Typography color="error">{errors.photo.message}</Typography>}
+
+        <TextField
+          fullWidth
+          label={t('productForm.details')}
+          {...register('details', { required: 'Введите описание товара' })}
+          
+          id="details"
+          placeholder="Введите описание"
+         error={!!errors.details} helperText={errors.details?.message} />
+        {errors.details && <Typography color="error">{errors.details.message}</Typography>}
+
+        <TextField
+          fullWidth
+          label={t('productForm.price')}
+          {...register('price', {
+            required: 'Введите цену',
+            valueAsNumber: true,
+            min: { value: 0, message: 'Цена должна быть больше или равна 0' },
+          })}
+          
+          type="number"
+          id="price"
+          placeholder="Введите цену"
+         error={!!errors.price} helperText={errors.price?.message} />
+        {errors.price && <Typography color="error">{errors.price.message}</Typography>}
+
+        <Box display="flex" gap={2} flexWrap="wrap">
+          <Button variant="contained" size="medium" type="submit" disabled={loading}>
+            {isAddProcedure ? t('productForm.add') : t('productForm.edit')}
+          </Button>
+
+          {!isAddProcedure && (
+            <Button
+              variant="outlined"
+              color="error"
+              size="medium"
+              type="button"
+              onClick={deleteHandler}
+              disabled={loading}
+            >
+              {t('productForm.delete')}
+            </Button>
+          )}
+        </Box>
+
+        {error && <Typography color="error">Ошибка: {error.message}</Typography>}
+      </Stack>
+    </Paper>
   );
 };
