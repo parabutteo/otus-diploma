@@ -17,6 +17,26 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
 import { COMMAND_ID } from '../shared/constants';
 import { GET_PRODUCTS } from '../graphql/queries/products';
+import { type SelectChangeEvent } from '@mui/material/Select'
+
+export interface Category {
+  __typename: 'Category';
+  id: string;
+  name: string;
+  photo: string | null;
+  commandId: string;
+}
+
+export interface Product {
+  __typename: 'Product';
+  id: string;
+  name: string;
+  photo: string;
+  desc: string;
+  price: number;
+  category: Category;
+  commandId: string;
+}
 
 export const Catalog: React.FC = () => {
   const { t } = useTranslation();
@@ -25,7 +45,7 @@ export const Catalog: React.FC = () => {
   const [pageNumber, setPageNumber] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(defaultPageSize);
   const [sortDirection, setSortDirection] = React.useState<'ASC' | 'DESC'>('ASC');
-  const [products, setProducts] = React.useState<any[]>([]);
+  const [products, setProducts] = React.useState<Product[]>([]);
   const [totalCount, setTotalCount] = React.useState(0);
 
   const input = React.useMemo(() => ({
@@ -64,7 +84,7 @@ export const Catalog: React.FC = () => {
     setPageNumber(page);
   };
 
-  const onPageSizeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const onPageSizeChange = (event: SelectChangeEvent) => {
     const newSize = Number(event.target.value);
     setPageSize(newSize);
     setPageNumber(1);
@@ -77,8 +97,9 @@ export const Catalog: React.FC = () => {
     });
   };
 
-  const onSortDirectionChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSortDirection(event.target.value as 'ASC' | 'DESC');
+  const onSortDirectionChange = (event: SelectChangeEvent) => {
+    const value = event.target.value as 'ASC' | 'DESC';
+    setSortDirection(value);
   };
 
   if (loading && pageNumber === 1) return <Loader />;
@@ -91,7 +112,7 @@ export const Catalog: React.FC = () => {
 
   return (
     <Layout title={t('catalogue.title')}>
-      <Container maxWidth="xl" sx={{ py: 4 }}>
+      {products.length === 0 ? <Loader /> : (<Container maxWidth="xl" sx={{ py: 4 }}>
         <Grid container spacing={3} columns={12}>
           {sortedProducts.length === 0 && (
             <Box p={4} width="100%" textAlign="center">
@@ -99,7 +120,7 @@ export const Catalog: React.FC = () => {
             </Box>
           )}
           {sortedProducts.map(item => (
-            <Grid key={item.id} xs={12} sm={6} md={4} lg={3}>
+            <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4, lg: 3}}>
               <ShortCard item={item} />
             </Grid>
           ))}
@@ -127,16 +148,17 @@ export const Catalog: React.FC = () => {
 
           <FormControl size="small" sx={{ minWidth: 140 }}>
             <InputLabel id="page-size-select-label">
-              {t('catalogue.itemsPerPage') || 'Товаров на странице'}
+              {t('catalogue.itemsPerPage')}
             </InputLabel>
             <Select
               labelId="page-size-select-label"
-              value={pageSize}
-              label={t('catalogue.itemsPerPage') || 'Товаров на странице'}
+              value={pageSize.toString()}
+              label={t('catalogue.itemsPerPage')}
               onChange={onPageSizeChange}
+              sx={{ minWidth: '155px'}}
             >
               {[5, 10, 20, 30].map(size => (
-                <MenuItem key={size} value={size}>
+                <MenuItem key={size} value={size.toString()}>
                   {size}
                 </MenuItem>
               ))}
@@ -158,7 +180,7 @@ export const Catalog: React.FC = () => {
             </Select>
           </FormControl>
         </Stack>
-      </Container>
+      </Container>)}
     </Layout>
   );
 };
