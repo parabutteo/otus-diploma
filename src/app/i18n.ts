@@ -60,6 +60,7 @@ const resources = {
         about: 'About Me',
         aboutPlaceholder: 'Write a few words about yourself',
         submit: 'Submit',
+        aboutRequired: 'Please write something about yourself',
       },
       profilePage: {
         title: 'Profile',
@@ -175,6 +176,7 @@ const resources = {
         about: 'Обо мне',
         aboutPlaceholder: 'Напишите пару слов о себе',
         submit: 'Отправить',
+        aboutRequired: 'Пожалуйста, напишите что-нибудь о себе',
       },
       profilePage: {
         title: 'Профиль',

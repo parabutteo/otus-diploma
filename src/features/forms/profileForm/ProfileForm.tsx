@@ -5,7 +5,6 @@ import { type ProfileT } from '../../../pages/Profile';
 import { useTranslation } from 'react-i18next';
 
 interface IProfileForm {
-  className?: string;
   form: ProfileT;
   setForm: React.Dispatch<React.SetStateAction<ProfileT | null>>;
   sendHandler: () => void;
@@ -16,7 +15,7 @@ type TProfileFormData = {
   aboutMe: string;
 };
 
-export const ProfileForm: React.FC<IProfileForm> = ({ className, form, setForm, sendHandler }) => {
+export const ProfileForm: React.FC<IProfileForm> = ({ form, setForm, sendHandler }) => {
   const {
     register,
     handleSubmit,
@@ -39,7 +38,7 @@ export const ProfileForm: React.FC<IProfileForm> = ({ className, form, setForm, 
       elevation={3}
       onSubmit={handleSubmit(onSubmit)}
       sx={{ p: 4, borderRadius: 3 }}
-      className={className}
+      
     >
       <Stack spacing={3}>
         <Box>
@@ -69,7 +68,11 @@ export const ProfileForm: React.FC<IProfileForm> = ({ className, form, setForm, 
             label={t('profileForm.about')}
             placeholder={t('profileForm.aboutPlaceholder')}
             defaultValue={form.aboutMe}
-            {...register('aboutMe')}
+            {...register('aboutMe', {
+              required: t('profileForm.aboutRequired')
+            })}
+            error={!!errors.aboutMe}
+            helperText={errors.aboutMe?.message}
             onChange={(e) => setForm({ ...form, aboutMe: e.target.value })}
           />
         </Box>
