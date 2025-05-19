@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
 import { ADD_CATEGORY } from '../../../graphql/mutations/products';
 import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 type TAuthFormData = {
   name: string;
@@ -14,6 +15,7 @@ interface CategoryFormProps {
 }
 
 export const CategoryForm: React.FC<CategoryFormProps> = ({ onCategoryAdded, onClose }) => {
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -34,12 +36,12 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ onCategoryAdded, onC
   const onSubmit = async (data: TAuthFormData) => {
     try {
       await addCategory({ variables: { name: data.name, input: mapFormDataToMutationInput(data) } });
-      alert('Категория успешно добавлена!');
+      alert(t('categoryForm.success'))
       reset();
       onCategoryAdded?.(); // Обновляем список категорий в родителе
       onClose?.(); // Закрываем модальное окно, если передано
     } catch (e) {
-      console.error('Ошибка при добавлении категории:', e);
+      console.error(t('categoryForm.errorPrefix'), e);
     }
   };
 
@@ -48,11 +50,11 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ onCategoryAdded, onC
       <Stack spacing={3}>
         <TextField
           fullWidth
-          label="Название"
-          {...register('name', { required: 'Это поле обязательно' })}
+          label={t('categoryForm.name')}
+          {...register('name', { required: t('categoryForm.nameRequired') })}
           type="text"
           id="name"
-          placeholder="Введите идентификатор"
+          placeholder={t('categoryForm.namePlaceholder')}
           error={!!errors.name}
           helperText={errors.name?.message}
         />
@@ -60,7 +62,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ onCategoryAdded, onC
 
         <Box display="flex" gap={2} flexWrap="wrap">
           <Button variant="contained" size="medium" type="submit" disabled={loading}>
-            Добавить
+            {t('admin.add')}
           </Button>
         </Box>
       </Stack>
