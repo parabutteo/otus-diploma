@@ -115,6 +115,14 @@ const resources = {
         myOrders: 'My Orders',
         admin: 'Admin',
         adminOrders: 'Admin Orders',
+      },
+      categoryForm: {
+        name: "Name",
+        namePlaceholder: "Enter category name",
+        nameRequired: "This field is required",
+        submit: "Add",
+        success: "Category added successfully!",
+        errorPrefix: "Error while adding category:",
       }
     },
   },
@@ -231,6 +239,14 @@ const resources = {
         myOrders: 'Мои заказы',
         admin: 'Админка',
         adminOrders: 'Заказы админа',
+      },
+      categoryForm: {
+        name: "Название",
+        namePlaceholder: "Введите название категории",
+        nameRequired: "Это поле обязательно",
+        submit: "Добавить",
+        success: "Категория успешно добавлена!",
+        errorPrefix: "Ошибка при добавлении категории:",
       }
     },
   },

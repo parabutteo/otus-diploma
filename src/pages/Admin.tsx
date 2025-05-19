@@ -33,6 +33,7 @@ export const Admin: React.FC = () => {
   const [isOpenCatModal, setIsOpenCatModal] = React.useState<boolean>(false);
 
   // Мутация удаления категории с refetchQueries для обновления списка
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [removeCategory, { loading: removeLoading, error: removeError }] = useMutation(REMOVE_CATEGORY, {
     refetchQueries: [{ query: GET_CATEGORIES }],
     awaitRefetchQueries: true, // Ждём завершения refetchQueries перед продолжением
@@ -83,7 +84,8 @@ export const Admin: React.FC = () => {
             <>
               <Table>
                 <TableBody>
-                  {categoryList.map((item) => (
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {categoryList.map((item: any) => (
                     <TableRow key={item.id}>
                       <TableCell>
                         <Box display="flex" justifyContent="space-between" alignItems="center">
