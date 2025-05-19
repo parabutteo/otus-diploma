@@ -260,6 +260,8 @@ const resources = {
         editExist: 'Редактирование имеющегося',
         good: 'товара',
         category: 'категории',
+        userOrders: 'Пользовательские заказы',
+        allOrders: 'Все заказы',
       },
       productForm: {
         add: 'Добавить',

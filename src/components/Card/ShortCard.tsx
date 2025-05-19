@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardMedia, CardContent, Typography } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Box } from '@mui/material';
 import { AddToBasket } from '../../components/AddToBasket';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { addItemToCart, removeItemFromCart } from '../../features/cart/cartSlice';
@@ -78,11 +78,13 @@ export const ShortCard: React.FC<IShortCard> = ({ item }) => {
     >
       <CardMedia component="img" image={photo} alt={name} height={420} sx={{ objectFit: 'cover' }} />
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-        <AddToBasket
-          counter={totalQuantity}
-          increaseClick={addItemToCartHandler}
-          decreaseClick={removeItemFromCartHandler}
-        />
+        <Box sx={{ minHeight: '43px'}}>
+          <AddToBasket
+            counter={totalQuantity}
+            increaseClick={addItemToCartHandler}
+            decreaseClick={removeItemFromCartHandler}
+          />
+        </Box>
         <Typography variant="h6" fontWeight={600}>
           {name}
         </Typography>
