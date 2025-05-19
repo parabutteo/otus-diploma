@@ -1,19 +1,27 @@
 import { gql } from '@apollo/client';
 
 export const GET_PRODUCTS = gql`
-  query GetProducts($input: ProductGetManyInput) {
+  query GetMany($input: ProductGetManyInput) {
     products {
       getMany(input: $input) {
+        pagination {
+          pageSize
+          pageNumber
+          total
+        }
         data {
           id
           name
           photo
-          price
-          commandId
-          category {
-            name
-          }
           desc
+          price
+          category {
+            id
+            name
+            photo
+            commandId
+          }
+          commandId
         }
       }
     }
