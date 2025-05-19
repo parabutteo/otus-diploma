@@ -113,78 +113,78 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType }) => {
             {...register('id', { required: true })}
             type="text"
             id="id"
-            placeholder="Введите идентификатор"
+            placeholder={t("productFormAdmin.enterID")}
             error={!!errors.id}
             helperText={errors.id?.message}
           />
         )}
 
         <TextField
-          label={t('productForm.title')}
-          {...register('name', { required: 'Введите название товара' })}
+          label={t('productFormAdmin.title')}
+          {...register('name', { required: t("productFormAdmin.namePlaceholder") })}
           type="text"
           id="name"
-          placeholder="Введите название"
+          placeholder={t("productFormAdmin.namePlaceholder")}
           fullWidth
           error={!!errors.name}
           helperText={errors.name?.message}
         />
-        {errors.name && <Typography color="error">{errors.name.message}</Typography>}
+        
 
         <TextField
           select
           fullWidth
-          label={t('productForm.category')}
-          {...register('category', { required: 'Выберите категорию' })}
+          label={t('productFormAdmin.category')}
+          {...register('category', { required: t('productFormAdmin.category') })}
           id="category"
         >
           <MenuItem value={CATEGORY.tshirt}>Футболки, рубашки</MenuItem>
           <MenuItem value={CATEGORY.outware}>Верхняя одежда</MenuItem>
           <MenuItem value={CATEGORY.shoes}>Обувь</MenuItem>
         </TextField>
-        {errors.category && <Typography color="error">{errors.category.message}</Typography>}
+        
 
         <TextField
           fullWidth
-          label={t('productForm.image')}
-          {...register('photo', { required: 'Введите путь к изображению' })}
+          label={t('productFormAdmin.image')}
+          {...register('photo', { required: t("productFormAdmin.imagePlaceholder") })}
           id="photo"
-          placeholder="Введите адрес изображения"
+          placeholder={t("productFormAdmin.imagePlaceholder")}
           error={!!errors.photo}
           helperText={errors.photo?.message}
         />
-        {errors.photo && <Typography color="error">{errors.photo.message}</Typography>}
+        
 
         <TextField
           fullWidth
-          label={t('productForm.details')}
-          {...register('details', { required: 'Введите описание товара' })}
+          label={t('productFormAdmin.details')}
+          {...register('details', { required: t("productFormAdmin.detailsPlaceholder") })}
           id="details"
-          placeholder="Введите описание"
+          placeholder={t("productFormAdmin.detailsPlaceholder")}
           error={!!errors.details}
           helperText={errors.details?.message}
         />
-        {errors.details && <Typography color="error">{errors.details.message}</Typography>}
+        
 
         <TextField
           fullWidth
-          label={t('productForm.price')}
+          label={t('productFormAdmin.price')}
           {...register('price', {
             required: 'Введите цену',
             valueAsNumber: true,
-            min: { value: 0, message: 'Цена должна быть больше или равна 0' },
+            min: { value: 0, message: t('productFormAdmin.priceErr') },
           })}
           type="number"
           id="price"
-          placeholder="Введите цену"
+          placeholder={t("productFormAdmin.pricePlaceholder")}
           error={!!errors.price}
           helperText={errors.price?.message}
         />
-        {errors.price && <Typography color="error">{errors.price.message}</Typography>}
+        
 
         <Box display="flex" gap={2} flexWrap="wrap">
           <Button variant="contained" size="medium" type="submit" disabled={loading}>
-            {isAddProcedure ? t('productForm.add') : t('productForm.edit')}
+            {isAddProcedure ? t('productFormAdmin.add') : t('productFormAdmin.edit')}
           </Button>
 
           {!isAddProcedure && (
@@ -196,12 +196,12 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType }) => {
               onClick={deleteHandler}
               disabled={loading}
             >
-              {t('productForm.delete')}
+              {t('productFormAdmin.delete')}
             </Button>
           )}
         </Box>
 
-        {error && <Typography color="error">Ошибка: {error.message}</Typography>}
+        {error && <Typography color="error">{t('productFormAdmin.err')}: {error.message}</Typography>}
       </Stack>
     </Paper>
   );

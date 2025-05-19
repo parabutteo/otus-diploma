@@ -1,9 +1,9 @@
 import React from 'react';
-import clsx from 'clsx';
 import type { FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormReset } from 'react-hook-form';
 import type { NavigateFunction } from 'react-router-dom';
 import type { TAuthFormData } from './types';
-import { Button, Stack, TextField } from '@mui/material';
+import { Box, Button, Stack, TextField } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 interface IAuthMarkUp {
   errors: FieldErrors<TAuthFormData>;
@@ -25,53 +25,54 @@ export const AuthMarkUp: React.FC<IAuthMarkUp> = ({
   onSubmit,
   navigation,
   isRegProcedure,
-}) => (
-  <>
-    <form onSubmit={handleSubmit(onSubmit)}>
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <Box component="form" onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
         <TextField
           {...register('login', {
-            required: 'Значение поля "логин" пустое',
+            required: t('auth.loginRequired'),
             pattern: !isRegProcedure
               ? {
                   value: /\S+@\S+\.\S+/,
-                  message: 'Введите корректный адрес электронной почты',
+                  message: t('auth.loginInvalid'),
                 }
               : undefined,
           })}
-          className={clsx((errors.login || errorLogin) && 'error-field')}
           type="text"
           id="login"
-          placeholder="Укажите логин"
+          placeholder={t('auth.loginPlaceholder')}
           fullWidth
           variant="outlined"
+          error={!!errors.login || !!errorLogin}
+          helperText={errors.login?.message || errorLogin}
         />
-        {errors.login && !errorLogin && <p className="error">{errors.login.message}</p>}
-        {errorLogin && <p className="error">{errorLogin}</p>}
 
         <TextField
           {...register('pass', {
-            required: 'Значение поля "пароль" пустое',
+            required: t('auth.passwordRequired'),
             minLength: isRegProcedure
               ? {
                   value: 8,
-                  message: 'Пароль должен содержать минимум 8 символов',
+                  message: t('auth.passwordMin'),
                 }
               : undefined,
           })}
-          className={clsx(errors.pass && 'error-field')}
           type="password"
           id="pass"
-          placeholder="Укажите пароль"
+          placeholder={t('auth.passwordPlaceholder')}
           autoComplete="currentPassword"
           fullWidth
           variant="outlined"
+          error={!!errors.pass}
+          helperText={errors.pass?.message}
         />
-        {errors.pass && <p className="error">{errors.pass.message}</p>}
 
         <Stack direction="row" spacing={2}>
           <Button variant="contained" type="submit">
-            {isRegProcedure ? 'Зарегистрироваться' : 'Войти'}
+            {isRegProcedure ? t('auth.registerBtn') : t('auth.loginBtn')}
           </Button>
           {!isRegProcedure && (
             <Button
@@ -82,7 +83,7 @@ export const AuthMarkUp: React.FC<IAuthMarkUp> = ({
                 reset();
               }}
             >
-              Зарегистрироваться
+              {t('auth.registerBtn')}
             </Button>
           )}
           {isRegProcedure && (
@@ -94,11 +95,11 @@ export const AuthMarkUp: React.FC<IAuthMarkUp> = ({
                 reset();
               }}
             >
-              Назад ко входу
+              {t('reg.backBtn')}
             </Button>
           )}
         </Stack>
       </Stack>
-    </form>
-  </>
-);
+    </Box>
+  );
+};

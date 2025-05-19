@@ -33,21 +33,22 @@ export const Admin: React.FC = () => {
   const [isOpenCatModal, setIsOpenCatModal] = React.useState<boolean>(false);
 
   // Мутация удаления категории с refetchQueries для обновления списка
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [removeCategory, { loading: removeLoading, error: removeError }] = useMutation(REMOVE_CATEGORY, {
     refetchQueries: [{ query: GET_CATEGORIES }],
     awaitRefetchQueries: true, // Ждём завершения refetchQueries перед продолжением
   });
 
   const removeCatHandler = async (id: string) => {
-    if (!window.confirm('Вы уверены, что хотите удалить эту категорию?')) {
+    if (!window.confirm(t('admin.removeConfirm'))) {
       return;
     }
     try {
       await removeCategory({ variables: { removeId: id } });
-      alert('Категория успешно удалена.');
+      alert(t('admin.removeSuccess'));
     } catch (e) {
       console.error('Ошибка при удалении категории:', e);
-      alert('Ошибка при удалении категории.');
+      alert(t('admin.removeError'));
     }
   };
 
@@ -59,7 +60,7 @@ export const Admin: React.FC = () => {
   return (
     <Layout title={t('admin.title')}>
       <Typography variant="h5" sx={{ mb: 2 }}>
-        Действия с товарами:
+        {t('admin.actions')}
       </Typography>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mb={3}>
         <Button variant="contained" color="primary" onClick={openAddModal}>
@@ -71,19 +72,20 @@ export const Admin: React.FC = () => {
       </Stack>
 
       <Typography variant="h5" sx={{ mt: 8 }}>
-        Действия с категориями:
+        {t('admin.categoryActions')}
       </Typography>
       {loading && <Loader />}
-      {error && <Typography color="error">Ошибка загрузки категорий: {error.message}</Typography>}
+      {error && <Typography color="error">{t('admin.loadingError')}: {error.message}</Typography>}
       {!loading && !error && (
         <>
           {categoryList.length === 0 ? (
-            <Typography>Категории не найдены</Typography>
+            <Typography>{t('admin.notFound')}</Typography>
           ) : (
             <>
               <Table>
                 <TableBody>
-                  {categoryList.map((item) => (
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {categoryList.map((item: any) => (
                     <TableRow key={item.id}>
                       <TableCell>
                         <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -94,7 +96,7 @@ export const Admin: React.FC = () => {
                             onClick={() => removeCatHandler(item.id)}
                             disabled={removeLoading}
                           >
-                            Удалить
+                            {t('admin.delete')}
                           </Button>
                         </Box>
                       </TableCell>
@@ -103,7 +105,7 @@ export const Admin: React.FC = () => {
                 </TableBody>
               </Table>
               <Button variant="outlined" sx={{ mt: 2 }} onClick={() => setIsOpenCatModal(true)}>
-                Добавить новую категорию
+                {t('admin.addNewCategory')}
               </Button>
             </>
           )}
@@ -111,11 +113,11 @@ export const Admin: React.FC = () => {
       )}
 
       <Typography variant="h5" sx={{ mt: 8, mb: 2 }}>
-        Заказы пользователей:
+        {t('admin.userOrders')}
       </Typography>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mb={3}>
         <Button variant="contained" color="primary" onClick={() => navigate('/admin/orders')}>
-          Все заказы
+          {t('admin.allOrders')}
         </Button>
       </Stack>
 
