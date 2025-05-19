@@ -6,6 +6,7 @@ import { Button, Box, Typography, List, ListItem } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { getStatusLabel } from '../shared/getStatusLabel';
 
 export const AdminOrders: React.FC = () => {
   const { t } = useTranslation();
@@ -16,19 +17,6 @@ export const AdminOrders: React.FC = () => {
   });
 
   const ordersList = data?.orders.getMany.data;
-
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'PendingConfirmation':
-        return 'ожидает подтверждения';
-      case 'OrderCancelled':
-        return 'отменён';
-      case 'Processing':
-        return 'подтверждён';
-      default:
-        return status;
-    }
-  };
 
   return (
     <Layout title="Все заказы">
