@@ -6,42 +6,27 @@ import { Button, Box, Typography, List, ListItem } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { GET_PROFILE } from '../graphql/queries/profile';
+import { getStatusLabel } from '../shared/getStatusLabel';
 
 export const AdminOrders: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const input = {};
 
   const { data, loading, error } = useQuery(GET_ORDERS, {
-    variables: { input },
+    variables: { input: {} },
   });
-
-  const { data: profileData, loading: profileLoading, error: profileError } = useQuery(GET_PROFILE);
-
-  const getEmailById = (id: string): string | null => {
-    if (profileLoading || profileError || !profileData) return null;
-
-    const profile = profileData.profile;
-
-    if (profile && profile.id === id) {
-      return profile.email ?? null;
-    }
-
-    return null;
-  };
 
   const ordersList = data?.orders.getMany.data;
 
   return (
     <Layout title="Все заказы">
-      {(loading || profileLoading) && <Loader />}
-      {(error || profileError) && (
+      {loading && <Loader />}
+      {error && (
         <Typography color="error">
-          {t('orders.error')}: {error?.message || profileError?.message}
+          {t('orders.error')}: {error.message}
         </Typography>
       )}
-      {!loading && !error && !profileLoading && !profileError && (
+      {!loading && !error && (
         <>
           {ordersList && ordersList.length > 0 ? (
             ordersList.map((order: any) => (
@@ -56,13 +41,8 @@ export const AdminOrders: React.FC = () => {
                 }}
               >
                 <Typography variant="h6">ID: {order.id}</Typography>
-                <Typography variant="h6">
-                  Заказ в статусе:&nbsp;
-                  {order.status === 'PendingConfirmation' && 'ожидает подтверждения'}
-                  {order.status === 'OrderCancelled' && 'отменён'}
-                  {order.status === 'Processing' && 'подтверждён'}
-                </Typography>
-                <Typography sx={{ mt: 2 }}>Заказано пользователем: {getEmailById(order.user.id) ?? '-'}</Typography>
+                <Typography variant="h6">Заказ в статусе: {getStatusLabel(order.status)}</Typography>
+                <Typography sx={{ mt: 2 }}>Заказано пользователем: {order.user.name || '-'}</Typography>
                 <Typography sx={{ mt: 1 }}>
                   {t('orders.itemsCount')}: {order.products.length}
                 </Typography>

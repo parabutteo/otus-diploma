@@ -8,86 +8,65 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { GET_PROFILE_ID } from '../graphql/queries/profile';
+import { getStatusLabel } from '../shared/getStatusLabel';
 
 export const Orders: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const input = {};
+
+  // Получаем profileId текущего пользователя
+  const { data: pidData } = useQuery(GET_PROFILE_ID);
+  const profileId = pidData?.profile?.id || null;
 
   // Запрос списка заказов
   const { data, loading, error, refetch } = useQuery(GET_ORDERS, {
-    variables: { input },
+    variables: { input: {} },
   });
 
-  // Принудительно обновляем список заказов при загрузке страницы
   useEffect(() => {
     refetch();
   }, [refetch]);
 
-  // Мутация отмены заказа
+  // Мутации для обновления, удаления заказов
   const [cancelOrder, { loading: canceling }] = useMutation(UPDATE_ORDER, {
-    onCompleted: () => {
-      refetch();
-    },
-    onError: (error) => {
-      alert(`Отменить заказ не удалось. Ошибка ${error.message}`);
-    },
+    onCompleted: refetch,
+    onError: (error) => alert(`Отменить заказ не удалось. Ошибка ${error.message}`),
   });
 
-  // Запрос profileId текущего пользователя
-  const { data: pidData } = useQuery(GET_PROFILE_ID);
-  const profileId = pidData?.profile?.id || null;
+  const [removeOrder, { loading: removing }] = useMutation(REMOVE_ORDER, {
+    onCompleted: refetch,
+  });
 
-  // Получаем список заказов
+  const [confirmOrder, { loading: confirming }] = useMutation(UPDATE_ORDER, {
+    onCompleted: refetch,
+    onError: (error) => alert(`Подтвердить заказ не удалось. Ошибка ${error.message}`),
+  });
+
   const ordersList = data?.orders.getMany.data || [];
-
-  // Фильтруем заказы по profileId (order.user.id)
   const filteredOrders = profileId ? ordersList.filter((order: any) => order.user?.id === profileId) : [];
 
-  // Обработчик отмены заказа
   const handleCancelOrder = (orderId: string) => {
-    if (window.confirm(`${t('orders.confirmCancel')}`)) {
+    if (window.confirm(t('orders.confirmCancel'))) {
       cancelOrder({
         variables: {
           patchId: orderId,
-          input: {
-            status: 'OrderCancelled',
-          },
+          input: { status: 'OrderCancelled' },
         },
       });
     }
   };
 
-  // Мутация удаления заказа
-  const [removeOrder, { loading: removing }] = useMutation(REMOVE_ORDER, {
-    onCompleted: () => {
-      refetch();
-    },
-  });
   const handleRemoveOrder = (orderId: string) => {
-    if (window.confirm(`${t('orders.confirmRemove')}`)) {
-      removeOrder({
-        variables: { removeId: orderId },
-      });
+    if (window.confirm(t('orders.confirmRemove'))) {
+      removeOrder({ variables: { removeId: orderId } });
     }
   };
 
-  // Мутация подтверждения заказа
-  const [confirmOrder, { loading: confirming }] = useMutation(UPDATE_ORDER, {
-    onCompleted: () => {
-      refetch();
-    },
-    onError: (error) => {
-      alert(`Отменить заказ не удалось. Ошибка ${error.message}`);
-    },
-  });
   const handleConfirmOrder = (orderId: string) => {
     confirmOrder({
       variables: {
         patchId: orderId,
-        input: {
-          status: 'Processing',
-        },
+        input: { status: 'Processing' },
       },
     });
   };
@@ -97,30 +76,16 @@ export const Orders: React.FC = () => {
       {(loading || canceling || removing || confirming) && <Loader />}
       {error && (
         <Typography color="error">
-          {t('orders.error')}: {error?.message}
+          {t('orders.error')}: {error.message}
         </Typography>
       )}
       {!loading && !error && (
         <>
           {filteredOrders.length > 0 ? (
             filteredOrders.map((order: any) => (
-              <Box
-                key={order.id}
-                sx={{
-                  border: '1px solid',
-                  borderColor: 'divider',
-                  borderRadius: 2,
-                  p: 3,
-                  mb: 4,
-                }}
-              >
+              <Box key={order.id} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2, p: 3, mb: 4 }}>
                 <Typography variant="h6">ID: {order.id}</Typography>
-                <Typography variant="h6">
-                  Заказ в статусе:&nbsp;
-                  {order.status === 'PendingConfirmation' && 'ожидает подтверждения'}
-                  {order.status === 'OrderCancelled' && 'отменён'}
-                  {order.status === 'Processing' && 'подтверждён'}
-                </Typography>
+                <Typography variant="h6">Заказ в статусе: {getStatusLabel(order.status)}</Typography>
                 <Typography sx={{ mt: 1 }}>
                   {t('orders.itemsCount')}: {order.products.length}
                 </Typography>
