@@ -62,7 +62,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ onCategoryAdded, onC
 
         <Box display="flex" gap={2} flexWrap="wrap">
           <Button variant="contained" size="medium" type="submit" disabled={loading}>
-            Добавить
+            {t('admin.add')}
           </Button>
         </Box>
       </Stack>
