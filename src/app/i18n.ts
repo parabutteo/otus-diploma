@@ -4,6 +4,8 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
+      profile: 'Profile',
+      adminPanel: 'Admin Panel',
       auth: {
         title: 'Authorization',
         login: 'Login',
@@ -46,6 +48,10 @@ const resources = {
       catalogue: {
         title: 'Welcome to ParaVite Store',
         showMore: 'Show more',
+        itemsPerPage: 'Items per page',
+        sortByPrice: 'Sort by price',
+        priceAsc: 'Price: Low to High',
+        priceDesc: 'Price: High to Low',
       },
       card: {
         addToBasket: 'Add to basket',
@@ -161,6 +167,8 @@ const resources = {
   },
   ru: {
     translation: {
+      profile: 'Личный кабинет',
+      adminPanel: 'Панель администратора',
       auth: {
         title: 'Авторизация',
         login: 'Логин',
@@ -203,6 +211,10 @@ const resources = {
       catalogue: {
         title: 'Добро пожаловать в ParaVite Store',
         showMore: 'Показать ещё',
+        itemsPerPage: 'Товаров на странице',
+        sortByPrice: 'Сортировать по цене',
+        priceAsc: 'Сначала дешёвые',
+        priceDesc: 'Сначала дорогие',
       },
       card: {
         addToBasket: 'Добавить в корзину',

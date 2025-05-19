@@ -15,6 +15,7 @@ import {
   ListItemText,
   useTheme,
   useMediaQuery,
+  Button,
 } from '@mui/material';
 import StoreIcon from '@mui/icons-material/Store';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -124,13 +125,17 @@ export const Header: React.FC = () => {
 
               {isUserLoggedIn && (
                 <>
-                  <IconButton color="inherit" aria-label="Profile" onClick={() => navigate('/profile')}>
-                    <AccountCircleIcon />
-                  </IconButton>
+                  <Button variant="text" color="inherit" startIcon={<AccountCircleIcon />} onClick={() => navigate('/profile')} sx={{ borderRadius: 9}}>
+                    <Typography variant="body2" sx={{ ml: 1 }}>
+                      {t('profile')}
+                    </Typography>
+                  </Button>
                   {isAdminRole && (
-                    <IconButton color="inherit" aria-label="Admin" onClick={() => navigate('/admin')}>
-                      <AdminPanelSettingsIcon />
-                    </IconButton>
+                    <Button variant="text" color="inherit" startIcon={<AdminPanelSettingsIcon />} onClick={() => navigate('/admin')} sx={{ borderRadius: 9}}>
+                      <Typography variant="body2" sx={{ ml: 1 }}>
+                        {t('adminPanel')}
+                      </Typography>
+                    </Button>
                   )}
                 </>
               )}
