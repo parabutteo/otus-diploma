@@ -1,4 +1,4 @@
-import { REST_API_SERVER_URL, COMMAND_ID } from '../../constants';
+import { REST_API_SERVER_URL, COMMAND_ID } from '../../../features/constants';
 
 interface ISingUpResponse {
   errors?: Array<{ extensions: { code: string } }>;

@@ -8,7 +8,6 @@ export const SIGN_UP = gql`
           id
           name
           email
-          signUpDate
           commandId
         }
         token
@@ -26,7 +25,6 @@ export const SIGN_IN = gql`
           id
           name
           email
-          signUpDate
           commandId
         }
       }

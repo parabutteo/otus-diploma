@@ -1,12 +1,11 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/client';
-import { CATEGORY } from '../../../shared/constants';
+import { useForm, Controller } from 'react-hook-form';
+import { useMutation, useQuery } from '@apollo/client';
 import { ADD_PRODUCT, PUT_PRODUCT, REMOVE_PRODUCT } from '../../../graphql/mutations/products';
-import { Box, Button, MenuItem, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, MenuItem, Paper, Stack, TextField, Typography, Autocomplete } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { GET_CATEGORIES, GET_PRODUCTS_IDS } from '../../../graphql/queries/products';
 
-// тип процедуры: добавление или редактирование
 type TProcedure = 'add' | 'edit';
 
 type TAuthFormData = {
@@ -18,26 +17,22 @@ type TAuthFormData = {
   details: string;
 };
 
+type TCategory = {
+  id: string;
+  name: string;
+};
+
 interface IProductForm {
-  /** Вид формы */
   procedureType: TProcedure;
 }
 
-/**
- * Компонент добавления/редактирования продукта
- *
- * Тип формы прокидывается пропсом
- *
- * @param procedureType тип процедуры
- *
- * @returns React.FC
- */
 export const ProductForm: React.FC<IProductForm> = ({ procedureType }) => {
   const {
     register,
     handleSubmit,
     reset,
     watch,
+    control,
     formState: { errors },
   } = useForm<TAuthFormData>({
     defaultValues: {
@@ -45,14 +40,25 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType }) => {
       name: '',
       category: '',
       photo: '',
-      price: 0,
+      price: 1,
       details: '',
     },
   });
 
+  const { data: productsIdsData } = useQuery<{
+    products: {
+      getMany: {
+        data: { id: string }[];
+      };
+    };
+  }>(GET_PRODUCTS_IDS, {
+    variables: { input: {} },
+  });
+
+  const productIds = productsIdsData?.products?.getMany?.data.map((product) => product.id) || [];
+
   const { t } = useTranslation();
 
-  // Признак формы с типом "добавление товара"
   const isAddProcedure = procedureType === 'add';
 
   const [addProduct, { loading: addLoading, error: addError }] = useMutation(ADD_PRODUCT);
@@ -103,33 +109,61 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType }) => {
   const loading = isAddProcedure ? addLoading : putLoading || deleteLoading;
   const error = isAddProcedure ? addError : putError || deleteError;
 
+  const {
+    data: categoryData,
+    loading: categoryLoading,
+    error: categoryError,
+  } = useQuery<{
+    categories: {
+      getMany: {
+        data: TCategory[];
+      };
+    };
+  }>(GET_CATEGORIES);
+
+  const categoryList: TCategory[] = categoryData?.categories?.getMany?.data || [];
+
+  if (categoryLoading) {
+    return <Typography>{t('productFormAdmin.loadingCategories')}</Typography>;
+  }
+
+  if (categoryError) {
+    return <Typography color="error">{t('productFormAdmin.errorLoadingCategories')}</Typography>;
+  }
+
   return (
     <Paper component="form" onSubmit={handleSubmit(onSubmit)} sx={{ p: 4, borderRadius: 3 }}>
       <Stack spacing={3}>
         {!isAddProcedure && (
-          <TextField
-            fullWidth
-            label="ID"
-            {...register('id', { required: true })}
-            type="text"
-            id="id"
-            placeholder={t("productFormAdmin.enterID")}
-            error={!!errors.id}
-            helperText={errors.id?.message}
+          <Controller
+            name="id"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Autocomplete
+                {...field}
+                options={productIds}
+                onChange={(_, value) => field.onChange(value || '')}
+                renderInput={(params) => (
+                  <TextField {...params} label="ID" error={!!errors.id} helperText={errors.id?.message} fullWidth />
+                )}
+                freeSolo={false}
+                clearOnEscape
+              />
+            )}
           />
         )}
 
         <TextField
           label={t('productFormAdmin.title')}
-          {...register('name', { required: t("productFormAdmin.namePlaceholder") })}
+          {...register('name', { required: t('productFormAdmin.namePlaceholder') })}
           type="text"
           id="name"
-          placeholder={t("productFormAdmin.namePlaceholder")}
+          placeholder={t('productFormAdmin.namePlaceholder')}
           fullWidth
           error={!!errors.name}
           helperText={errors.name?.message}
         />
-        
 
         <TextField
           select
@@ -137,34 +171,35 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType }) => {
           label={t('productFormAdmin.category')}
           {...register('category', { required: t('productFormAdmin.category') })}
           id="category"
+          error={!!errors.category}
+          helperText={errors.category?.message}
         >
-          <MenuItem value={CATEGORY.tshirt}>Футболки, рубашки</MenuItem>
-          <MenuItem value={CATEGORY.outware}>Верхняя одежда</MenuItem>
-          <MenuItem value={CATEGORY.shoes}>Обувь</MenuItem>
+          {categoryList.map((item) => (
+            <MenuItem key={item.id} value={item.id}>
+              {item.name}
+            </MenuItem>
+          ))}
         </TextField>
-        
 
         <TextField
           fullWidth
           label={t('productFormAdmin.image')}
-          {...register('photo', { required: t("productFormAdmin.imagePlaceholder") })}
+          {...register('photo', { required: t('productFormAdmin.imagePlaceholder') })}
           id="photo"
-          placeholder={t("productFormAdmin.imagePlaceholder")}
+          placeholder={t('productFormAdmin.imagePlaceholder')}
           error={!!errors.photo}
           helperText={errors.photo?.message}
         />
-        
 
         <TextField
           fullWidth
           label={t('productFormAdmin.details')}
-          {...register('details', { required: t("productFormAdmin.detailsPlaceholder") })}
+          {...register('details', { required: t('productFormAdmin.detailsPlaceholder') })}
           id="details"
-          placeholder={t("productFormAdmin.detailsPlaceholder")}
+          placeholder={t('productFormAdmin.detailsPlaceholder')}
           error={!!errors.details}
           helperText={errors.details?.message}
         />
-        
 
         <TextField
           fullWidth
@@ -172,15 +207,14 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType }) => {
           {...register('price', {
             required: 'Введите цену',
             valueAsNumber: true,
-            min: { value: 0, message: t('productFormAdmin.priceErr') },
+            min: { value: 1, message: t('productFormAdmin.priceErr') },
           })}
           type="number"
           id="price"
-          placeholder={t("productFormAdmin.pricePlaceholder")}
+          placeholder={t('productFormAdmin.pricePlaceholder')}
           error={!!errors.price}
           helperText={errors.price?.message}
         />
-        
 
         <Box display="flex" gap={2} flexWrap="wrap">
           <Button variant="contained" size="medium" type="submit" disabled={loading}>
@@ -201,7 +235,11 @@ export const ProductForm: React.FC<IProductForm> = ({ procedureType }) => {
           )}
         </Box>
 
-        {error && <Typography color="error">{t('productFormAdmin.err')}: {error.message}</Typography>}
+        {error && (
+          <Typography color="error">
+            {t('productFormAdmin.err')}: {error.message}
+          </Typography>
+        )}
       </Stack>
     </Paper>
   );

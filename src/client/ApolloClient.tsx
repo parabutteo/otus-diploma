@@ -1,6 +1,6 @@
 import React, { type FC } from 'react';
 import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink } from '@apollo/client';
-import { GRAPH_QL_SERVER } from '../shared/constants';
+import { GRAPH_QL_SERVER } from '../features/constants';
 import { setContext } from '@apollo/client/link/context';
 
 const httpLink = new HttpLink({
@@ -21,6 +21,7 @@ export type ClientProps = {
   children: React.ReactNode;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Layout, Loader } from '../components';
 import { useQuery } from '@apollo/client';
@@ -6,7 +7,7 @@ import { Button, Box, Typography, List, ListItem } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { getStatusLabel } from '../shared/getStatusLabel';
+import { getStatusLabel } from '../features/getStatusLabel';
 
 export const AdminOrders: React.FC = () => {
   const { t } = useTranslation();

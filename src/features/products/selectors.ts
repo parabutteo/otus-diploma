@@ -1,4 +1,4 @@
-import { RootState } from '../../store/store';
+import type { RootState } from '../store/store';
 
 export const selectProductTitle = (state: RootState, id: string) => {
   return state.products.find((item) => item.id === id)?.title || '';

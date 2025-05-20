@@ -1,12 +1,12 @@
 import React from 'react';
 import { Card, CardMedia, CardContent, Typography, Box } from '@mui/material';
 import { AddToBasket } from '../../components/AddToBasket';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { addItemToCart, removeItemFromCart } from '../../features/cart/cartSlice';
+import { useAppDispatch, useAppSelector } from '../../features/store/hooks';
+import { addItemToCart, removeItemFromCart } from '../../entities/cart/cartSlice';
 import { GET_PROFILE_ID } from '../../graphql/queries/profile';
-import { useQuery } from '@apollo/client';
-import { ADMIN_ID, categoryMap } from '../../shared/constants';
+import { ADMIN_ID, categoryMap } from '../../features/constants';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 
 interface Category {
   name: string;
@@ -68,7 +68,6 @@ export const ShortCard: React.FC<IShortCard> = ({ item }) => {
     <Card
       onClick={() => navigate(`/card/${categoryPath}/id/${id}`)}
       sx={{
-        width: 300,
         height: '100%',
         cursor: 'pointer',
         display: 'flex',
@@ -76,9 +75,9 @@ export const ShortCard: React.FC<IShortCard> = ({ item }) => {
         justifyContent: 'space-between',
       }}
     >
-      <CardMedia component="img" image={photo} alt={name} height={420} sx={{ objectFit: 'cover' }} />
+      <CardMedia component="img" image={photo} alt={name} height={450} sx={{ objectFit: 'cover', objectPosition: 'top' }} />
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-        <Box sx={{ minHeight: '43px'}}>
+        <Box sx={{ minHeight: '43px' }}>
           <AddToBasket
             counter={totalQuantity}
             increaseClick={addItemToCartHandler}

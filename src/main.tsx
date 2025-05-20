@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import './app/i18n'; // i18n init
 import { CssBaseline } from '@mui/material';
 import { CustomThemeProvider } from './app/ThemeContext.tsx';
-import store from './store/store.ts';
+import store from './features/store/store.ts';
 import { Client as ApolloClient } from './client/ApolloClient';
 
 createRoot(document.getElementById('root')!).render(

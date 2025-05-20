@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAppDispatch } from '../../store/hooks';
-import { addItemToCart, removeFromCart, removeItemFromCart } from '../../features/cart/cartSlice';
+import { useAppDispatch } from '../../features/store/hooks';
+import { addItemToCart, removeFromCart, removeItemFromCart } from '../../entities/cart/cartSlice';
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCT } from '../../graphql/queries/products';
 import { AddToBasket } from '../AddToBasket';

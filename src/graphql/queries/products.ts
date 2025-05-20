@@ -19,7 +19,6 @@ export const GET_PRODUCTS = gql`
             id
             name
             photo
-            commandId
           }
           commandId
         }
@@ -27,6 +26,18 @@ export const GET_PRODUCTS = gql`
     }
   }
 `;
+
+export const GET_PRODUCTS_IDS = gql`
+    query GetProductIds($input: ProductGetManyInput) {
+      products {
+        getMany(input: $input) {
+          data {
+            id
+          }
+        }
+      }
+    }
+  `;
 
 export const GET_PRODUCT = gql`
   query GetProduct($getOneId: ID!) {
@@ -76,9 +87,7 @@ export const GET_ORDERS = gql`
           user {
             id
             name
-            commandId
           }
-          commandId
         }
       }
     }

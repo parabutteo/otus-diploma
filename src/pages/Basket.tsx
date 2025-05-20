@@ -7,8 +7,8 @@ import {
   Paper,
   Link as MuiLink,
 } from '@mui/material';
-import { useAppSelector } from '../store/hooks';
-import { clearCart } from '../features/cart/cartSlice';
+import { useAppSelector } from '../features/store/hooks';
+import { clearCart } from '../entities/cart/cartSlice';
 import { BasketItem, Layout, Loader } from '../components';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
@@ -16,7 +16,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useDispatch } from 'react-redux';
 import { useMutation } from '@apollo/client';
 import { ADD_ORDER } from '../graphql/mutations/products';
-import { backendErrorMessages } from '../shared/constants';
+import { backendErrorMessages } from '../features/constants';
 
 export const Basket: React.FC = () => {
   const navigate = useNavigate();

@@ -6,8 +6,6 @@ export const GET_PROFILE = gql`
       id
       name
       email
-      signUpDate
-      commandId
     }
   }
 `;

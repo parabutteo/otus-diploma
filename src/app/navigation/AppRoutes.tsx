@@ -13,17 +13,16 @@ import {
   Profile,
   RegisterPage,
 } from '../../pages';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { initializeApp } from '../../features/app/appSlice';
-import { ADMIN_ID } from '../../shared/constants';
-import { ModalItem } from '../../entities/ModalItem';
+import { useAppDispatch, useAppSelector } from '../../features/store/hooks';
+import { initializeApp } from '../../entities/app/appSlice';
+import { ADMIN_ID } from '../../features/constants';
+import { ModalItem } from '../../shared/ModalItem';
 
 export const AppRoutes: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const token = useAppSelector((state) => state.auth.token);
   const profileId = useAppSelector((state) => state.auth.profileId);
-  const isInit = useAppSelector((state) => state.app.initialized);
 
   React.useEffect(() => {
     dispatch(initializeApp());
@@ -33,9 +32,6 @@ export const AppRoutes: React.FC = () => {
   const userIsAuth = token !== null;
   // Признак админской роли
   const isAdminRole = profileId === ADMIN_ID;
-
-  console.log(`Приложение ${isInit ? '' : 'не '}инициализированно`);
-  console.log('Токен юзера: ' + token);
 
   return (
     <Routes>
