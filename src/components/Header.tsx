@@ -84,9 +84,9 @@ export const Header: React.FC = () => {
         </ListItem>
         {isUserLoggedIn && (
           <>
-          <ListItem component={'button'} onClick={() => navigate('/profile')}>
-            <ListItemText primary={t('nav.profile')} />
-          </ListItem>
+            <ListItem component={'button'} onClick={() => navigate('/profile')}>
+              <ListItemText primary={t('nav.profile')} />
+            </ListItem>
           </>
         )}
         <ListItem component={'button'} onClick={loginHandler}>
