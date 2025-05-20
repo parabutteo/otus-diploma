@@ -87,7 +87,7 @@ export const ShortCard: React.FC<IShortCard> = ({ item }) => {
         <Typography variant="h6" fontWeight={600}>
           {name}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography height={'41px'} variant="body2" color="text.secondary">
           {desc.length > 50 ? `${desc.slice(0, 50)}...` : desc}
         </Typography>
         <Typography variant="subtitle1" fontWeight="bold">
