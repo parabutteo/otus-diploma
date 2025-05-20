@@ -13,10 +13,10 @@ import {
   Profile,
   RegisterPage,
 } from '../../pages';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { initializeApp } from '../../features/app/appSlice';
-import { ADMIN_ID } from '../../shared/constants';
-import { ModalItem } from '../../entities/ModalItem';
+import { useAppDispatch, useAppSelector } from '../../features/store/hooks';
+import { initializeApp } from '../../entities/app/appSlice';
+import { ADMIN_ID } from '../../features/constants';
+import { ModalItem } from '../../shared/ModalItem';
 
 export const AppRoutes: React.FC = () => {
   const dispatch = useAppDispatch();

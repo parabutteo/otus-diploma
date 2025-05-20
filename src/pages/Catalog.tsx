@@ -5,7 +5,7 @@ import { Loader } from '../components/Loader';
 import { ShortCard } from '../components/Card/ShortCard';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
-import { COMMAND_ID } from '../shared/constants';
+import { COMMAND_ID } from '../features/constants';
 import { GET_PRODUCTS } from '../graphql/queries/products';
 import { type SelectChangeEvent } from '@mui/material/Select';
 

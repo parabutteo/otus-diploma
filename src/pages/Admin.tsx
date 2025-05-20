@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Layout, Loader } from '../components';
 import { Box, Button, Stack, Table, TableBody, TableCell, TableRow, Typography } from '@mui/material';
-import { ModalItem } from '../entities/ModalItem';
+import { ModalItem } from '../shared/ModalItem';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_CATEGORIES } from '../graphql/queries/products';
-import { CategoryModal } from '../entities/CategoryModal';
+import { CategoryModal } from '../shared/CategoryModal';
 import { REMOVE_CATEGORY } from '../graphql/mutations/products';
 
 export const Admin: React.FC = () => {

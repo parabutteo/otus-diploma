@@ -1,6 +1,6 @@
 import React from 'react';
-import { addItemToCart, removeItemFromCart } from '../../features/cart/cartSlice';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { addItemToCart, removeItemFromCart } from '../../entities/cart/cartSlice';
+import { useAppDispatch, useAppSelector } from '../../features/store/hooks';
 import { AddToBasket } from '../AddToBasket';
 import { Box, Typography, Paper } from '@mui/material';
 

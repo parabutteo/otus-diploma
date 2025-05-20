@@ -1,9 +1,9 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useAppDispatch } from '../../../store/hooks';
-import { setProfileID, setToken } from '../../../features/auth/authSlice';
+import { useAppDispatch } from '../../store/hooks';
+import { setProfileID, setToken } from '../../../entities/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { backendErrorMessages, COMMAND_ID } from '../../../shared/constants';
+import { backendErrorMessages, COMMAND_ID } from '../../constants';
 import { AuthMarkUp } from './AuthMarkUp';
 import type { TAuthFormData } from './types';
 import { useMutation, ApolloError } from '@apollo/client';

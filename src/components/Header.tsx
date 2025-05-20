@@ -28,12 +28,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { visuallyHidden } from '@mui/utils';
-import { useAppSelector, useAppDispatch } from '../store/hooks.ts';
+import { useAppSelector, useAppDispatch } from '../features/store/hooks.ts';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '../app/ThemeContext.tsx';
-import { logout } from '../features/auth/authSlice.ts';
-import { clearCart } from '../features/cart/cartSlice.ts';
-import { ADMIN_ID } from '../shared/constants.ts';
+import { logout } from '../entities/auth/authSlice.ts';
+import { clearCart } from '../entities/cart/cartSlice.ts';
+import { ADMIN_ID } from '../features/constants.ts';
 
 export const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -77,16 +77,20 @@ export const Header: React.FC = () => {
     <Box sx={{ width: 250 }} role="presentation" onClick={() => setDrawerOpen(false)}>
       <List>
         <ListItem component={'button'} onClick={() => navigate('/')}>
-          <ListItemText primary={t('home') || 'Home'} />
+          <ListItemText primary={t('nav.home') || 'Home'} />
         </ListItem>
         <ListItem component={'button'} onClick={() => navigate('/cart')}>
-          <ListItemText primary={t('cart')} />
+          <ListItemText primary={t('nav.cart')} />
         </ListItem>
-        <ListItem component={'button'} onClick={toggleTheme}>
-          <ListItemText primary={mode === 'dark' ? 'Light mode' : 'Dark mode'} />
-        </ListItem>
-        <ListItem component={'button'} onClick={handleLangClick}>
-          <ListItemText primary={t('language') || 'Language'} />
+        {isUserLoggedIn && (
+          <>
+          <ListItem component={'button'} onClick={() => navigate('/profile')}>
+            <ListItemText primary={t('nav.profile')} />
+          </ListItem>
+          </>
+        )}
+        <ListItem component={'button'} onClick={loginHandler}>
+          <ListItemText primary={!isUserLoggedIn ? t('login') : t('logout')} />
         </ListItem>
       </List>
     </Box>

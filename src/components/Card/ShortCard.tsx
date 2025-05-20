@@ -1,10 +1,10 @@
 import React from 'react';
 import { Card, CardMedia, CardContent, Typography, Box } from '@mui/material';
 import { AddToBasket } from '../../components/AddToBasket';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { addItemToCart, removeItemFromCart } from '../../features/cart/cartSlice';
+import { useAppDispatch, useAppSelector } from '../../features/store/hooks';
+import { addItemToCart, removeItemFromCart } from '../../entities/cart/cartSlice';
 import { GET_PROFILE_ID } from '../../graphql/queries/profile';
-import { ADMIN_ID, categoryMap } from '../../shared/constants';
+import { ADMIN_ID, categoryMap } from '../../features/constants';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 

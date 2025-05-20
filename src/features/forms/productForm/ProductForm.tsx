@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { ADD_PRODUCT, PUT_PRODUCT, REMOVE_PRODUCT } from '../../../graphql/mutations/products';
 import { Box, Button, MenuItem, Paper, Stack, TextField, Typography, Autocomplete } from '@mui/material';
 import { useTranslation } from 'react-i18next';

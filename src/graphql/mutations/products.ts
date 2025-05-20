@@ -12,10 +12,7 @@ export const ADD_PRODUCT = gql`
         category {
           id
           name
-          photo
-          commandId
         }
-        commandId
       }
     }
   }
@@ -33,10 +30,7 @@ export const PUT_PRODUCT = gql`
         category {
           id
           name
-          photo
-          commandId
         }
-        commandId
       }
     }
   }
@@ -54,10 +48,7 @@ export const REMOVE_PRODUCT = gql`
         category {
           id
           name
-          photo
-          commandId
         }
-        commandId
       }
     }
   }

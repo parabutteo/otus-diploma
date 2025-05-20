@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Box, Container, Grid, Link, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '../store/hooks';
+import { useAppSelector } from '../features/store/hooks';
 import { Link as RouterLink } from 'react-router-dom';
 
 export const Footer: React.FC = () => {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect } from 'react';
 import { Layout, Loader } from '../components';
 import { useQuery, useMutation } from '@apollo/client';
@@ -8,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { GET_PROFILE_ID } from '../graphql/queries/profile';
-import { getStatusLabel } from '../shared/getStatusLabel';
+import { getStatusLabel } from '../features/getStatusLabel';
 
 export const Orders: React.FC = () => {
   const { t } = useTranslation();
