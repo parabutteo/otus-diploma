@@ -28,6 +28,18 @@ export const GET_PRODUCTS = gql`
   }
 `;
 
+export const GET_PRODUCTS_IDS = gql`
+  query GetProductIds($input: ProductGetManyInput) {
+    products {
+      getMany(input: $input) {
+        data {
+          id
+        }
+      }
+    }
+  }
+`;
+
 export const GET_PRODUCT = gql`
   query GetProduct($getOneId: ID!) {
     products {

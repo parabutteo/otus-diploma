@@ -117,21 +117,27 @@ export const Header: React.FC = () => {
 
           {!isMobile && (
             <>
-              <IconButton color="inherit" aria-label={t('cart')} onClick={() => navigate('/cart')}>
-                <Badge badgeContent={cartItemsCounter} color="error">
-                  <ShoppingCartIcon />
-                </Badge>
-              </IconButton>
-
               {isUserLoggedIn && (
                 <>
-                  <Button variant="text" color="inherit" startIcon={<AccountCircleIcon />} onClick={() => navigate('/profile')} sx={{ borderRadius: 9}}>
+                  <Button
+                    variant="text"
+                    color="inherit"
+                    startIcon={<AccountCircleIcon />}
+                    onClick={() => navigate('/profile')}
+                    sx={{ borderRadius: 9, m: 1 }}
+                  >
                     <Typography variant="body2" sx={{ ml: 1 }}>
                       {t('profile')}
                     </Typography>
                   </Button>
                   {isAdminRole && (
-                    <Button variant="text" color="inherit" startIcon={<AdminPanelSettingsIcon />} onClick={() => navigate('/admin')} sx={{ borderRadius: 9}}>
+                    <Button
+                      variant="text"
+                      color="inherit"
+                      startIcon={<AdminPanelSettingsIcon />}
+                      onClick={() => navigate('/admin')}
+                      sx={{ borderRadius: 9, m: 1 }}
+                    >
                       <Typography variant="body2" sx={{ ml: 1 }}>
                         {t('adminPanel')}
                       </Typography>
@@ -140,15 +146,21 @@ export const Header: React.FC = () => {
                 </>
               )}
 
-              <IconButton color="inherit" onClick={toggleTheme} aria-label="Toggle theme">
+              <IconButton color="inherit" aria-label={t('cart')} onClick={() => navigate('/cart')} sx={{ m: 1 }}>
+                <Badge badgeContent={cartItemsCounter} color="error">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+
+              <IconButton color="inherit" onClick={toggleTheme} aria-label="Toggle theme" sx={{ m: 1 }}>
                 {mode === 'dark' ? <DarkModeIcon /> : <LightModeIcon />}
               </IconButton>
 
-              <IconButton color="inherit" onClick={handleLangClick} aria-label="Language">
+              <IconButton color="inherit" onClick={handleLangClick} aria-label="Language" sx={{ m: 1 }}>
                 <TranslateIcon />
               </IconButton>
 
-              <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+              <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)} sx={{ m: 1 }}>
                 <MenuItem selected={i18n.language === 'ru'} onClick={() => handleLangSelect('ru')}>
                   🇷🇺 Русский
                 </MenuItem>
@@ -157,7 +169,12 @@ export const Header: React.FC = () => {
                 </MenuItem>
               </Menu>
 
-              <IconButton color="inherit" onClick={loginHandler} aria-label={t(isUserLoggedIn ? 'logout' : 'login')}>
+              <IconButton
+                color="inherit"
+                onClick={loginHandler}
+                aria-label={t(isUserLoggedIn ? 'logout' : 'login')}
+                sx={{ ml: 1 }}
+              >
                 {isUserLoggedIn ? <LogoutIcon /> : <LoginIcon />}
                 <span style={visuallyHidden}>{t(isUserLoggedIn ? 'logout' : 'login')}</span>
               </IconButton>

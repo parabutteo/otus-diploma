@@ -33,8 +33,8 @@ export const Admin: React.FC = () => {
   const [isOpenCatModal, setIsOpenCatModal] = React.useState<boolean>(false);
 
   // Мутация удаления категории с refetchQueries для обновления списка
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [removeCategory, { loading: removeLoading, error: removeError }] = useMutation(REMOVE_CATEGORY, {
+
+  const [removeCategory, { loading: removeLoading }] = useMutation(REMOVE_CATEGORY, {
     refetchQueries: [{ query: GET_CATEGORIES }],
     awaitRefetchQueries: true, // Ждём завершения refetchQueries перед продолжением
   });
@@ -75,7 +75,11 @@ export const Admin: React.FC = () => {
         {t('admin.categoryActions')}
       </Typography>
       {loading && <Loader />}
-      {error && <Typography color="error">{t('admin.loadingError')}: {error.message}</Typography>}
+      {error && (
+        <Typography color="error">
+          {t('admin.loadingError')}: {error.message}
+        </Typography>
+      )}
       {!loading && !error && (
         <>
           {categoryList.length === 0 ? (

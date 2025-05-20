@@ -21,6 +21,7 @@ export type ClientProps = {
   children: React.ReactNode;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),

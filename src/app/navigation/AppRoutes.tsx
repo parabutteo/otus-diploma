@@ -23,7 +23,6 @@ export const AppRoutes: React.FC = () => {
 
   const token = useAppSelector((state) => state.auth.token);
   const profileId = useAppSelector((state) => state.auth.profileId);
-  const isInit = useAppSelector((state) => state.app.initialized);
 
   React.useEffect(() => {
     dispatch(initializeApp());
@@ -33,9 +32,6 @@ export const AppRoutes: React.FC = () => {
   const userIsAuth = token !== null;
   // Признак админской роли
   const isAdminRole = profileId === ADMIN_ID;
-
-  console.log(`Приложение ${isInit ? '' : 'не '}инициализированно`);
-  console.log('Токен юзера: ' + token);
 
   return (
     <Routes>
